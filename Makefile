@@ -1,4 +1,4 @@
-CC=clang++
+CC=g++
 FLAGS=-Wall -g
 
 INCLUDE=-I.
@@ -12,7 +12,7 @@ OBJECTS=$(SOURCES:.cpp=.o)
 
 $(TARGET): $(OBJECTS) *.h
 	@echo "Builing the whole project"
-	$(CC) -o $(TARGET) $(OBJECTS)
+	$(CC) -o $(TARGET) $(OBJECTS) -lGL -lglut -lGLU
 
 %.o: %.cpp
 	@echo "Compiling .cpp files"

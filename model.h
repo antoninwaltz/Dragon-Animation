@@ -44,6 +44,9 @@ class Model
         void loadFile(const char *filename);
         void saveModel();
         void printVertex();
+        std::vector<Vec3> getVertexList() {
+            return this->vertex_list;
+        }
 
     private:
         std::vector<Vec3> vertex_list;

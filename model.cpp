@@ -8,8 +8,8 @@
 #include <string>
 #include <sstream>
 #include <vector>
-#include <model.h>
 
+#include <model.h>
 #include <vectors.h>
 
 using namespace std;
@@ -97,6 +97,8 @@ void Model::loadFile(const char *filename) {
                 cout << "Unknown type: " << type << endl;
             }
         }
+    } else {
+        cout << "Can not open file" << endl;
     }
 }
 
