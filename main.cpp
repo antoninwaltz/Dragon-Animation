@@ -32,23 +32,26 @@ void display()
 {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glMatrixMode(GL_MODELVIEW);
-    glLoadIdentity();
-    glClearColor(0.0, 0.0, 0.0, 0.0);
-    glRotatef(angle, 0.0f, 1.0f, 0.0f);
 
+    glClearColor(0.0, 0.0, 0.0, 0.0);
+
+    glLoadIdentity();
     c.updateCamera();
+    glTranslatef(0, -0.5, 1);
+    glRotatef(angle, 0.0f, 1.0f, 0.0f);
+    glScalef(0.05, 0.05, 0.05);
 
     glBegin(GL_TRIANGLES);
         unsigned int size = m.getVertexList().size();
+        glColor3f(1.0, 0.0, 0.0);
         for (unsigned int i = 0; i < size; i++)
         {
             Vec3 v = m.getVertexList()[i];
-            glColor3f(0.0, 1.0, ((float)i)/size);
             glVertex3f(v.x, v.y, v.z);
         }
     glEnd();
     glutSwapBuffers();
-    angle += 0.9;
+    angle += 0.2;
 }
 
 
