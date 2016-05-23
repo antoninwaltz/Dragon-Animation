@@ -32,7 +32,7 @@ void Model::loadFile(const char *filename) {
                 Vec3 v(x, y, z);
 
                 this->vertex_list.push_back(v);                      // save the values into the vector vertex_list of
-                //cout << "Vertex: " << v << "\n";
+                // cout << "Vertex: " << v << "\n";
 
                 //cout << this->vertex_list.size() << endl;
             } else if (type == "f") {
@@ -41,17 +41,25 @@ void Model::loadFile(const char *filename) {
                 this->face_index_list.push_back(f[0]);
                 this->face_index_list.push_back(f[1]);
                 this->face_index_list.push_back(f[2]);
+            } else {
+                cout << "Unknown type: " << type << endl;
             }
         }
     }
 }
 
 void Model::printVertex() {
-    for (Vec3 v : this->vertex_list) {
-        cout << "Vertex: " << v << "\n";
+    for (unsigned int i = 0; i < this->vertex_list.size(); i++) {
+        cout << "Vertex: " << this->vertex_list[i] << "\n";
     }
-    for (int i : this->face_index_list) {
-        cout << "Face: " << i << "\n";
+    for (unsigned int i = 0; i < this->face_index_list.size(); i+=3) {
+        cout << "Face: "
+            << this->face_index_list[i]
+            << " "
+            << this->face_index_list[i+1]
+            << " "
+            << this->face_index_list[i+2]
+            << "\n";
     }
 }
 

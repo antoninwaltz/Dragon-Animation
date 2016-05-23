@@ -1,4 +1,4 @@
-CC=clang++-3.6
+CC=g++
 FLAGS=-Wall -g
 
 INCLUDE=-I.
@@ -20,5 +20,5 @@ $(TARGET): $(OBJECTS) *.h
 
 clean:
 	@echo "Cleaning"
-	rm -rf *.o
+	rm -rf *.o $(TARGET)
 
