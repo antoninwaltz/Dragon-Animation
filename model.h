@@ -23,6 +23,7 @@ class FaceVertex
             return os << "(" << v.v[0] << ", " << v.v[1] << ", " << v.v[2] << ")";
         }
         friend std::istream& operator>>(std::istream& is, FaceVertex& obj);
+        int getVertexIndex() { return v[0]; }
 
 };
 
@@ -36,6 +37,9 @@ class Face
         friend std::ostream& operator<<(std::ostream& os, const Face& f) {
             return os << f.v1 << f.v2 << f.v3;
         }
+        FaceVertex getV1() { return v1; }
+        FaceVertex getV2() { return v2; }
+        FaceVertex getV3() { return v3; }
 };
 
 class Model
@@ -44,6 +48,9 @@ class Model
         void loadFile(const char *filename);
         void saveModel();
         void printVertex();
+        std::vector<Face> getFaceList() {
+            return this->face_list;
+        }
         std::vector<Vec3> getVertexList() {
             return this->vertex_list;
         }
