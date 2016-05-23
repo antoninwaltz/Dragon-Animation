@@ -19,6 +19,10 @@ class AbstractVec2
         AbstractVec2( T X, T Y ) : x( X ), y( Y ) {
         }
 
+        friend std::ostream& operator<<(std::ostream& os, const AbstractVec2<T>& v) {
+            return os << "(" << v.x << ", " << v.y << ")";
+        }
+
         bool operator==( const AbstractVec2 & v ) {
             return (x == v.x && y == v.y);
         }

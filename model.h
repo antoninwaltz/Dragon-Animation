@@ -11,6 +11,33 @@
 
 #include <vectors.h>
 
+
+class FaceVertex
+{
+    private:
+        int v[3];
+
+    public:
+        FaceVertex() { v[0] = 0; v[1] = 0; v[2] = 0; }
+        friend std::ostream& operator<<(std::ostream& os, const FaceVertex& v) {
+            return os << "(" << v.v[0] << ", " << v.v[1] << ", " << v.v[2] << ")";
+        }
+        friend std::istream& operator>>(std::istream& is, FaceVertex& obj);
+
+};
+
+class Face
+{
+    private:
+        FaceVertex v1, v2, v3;
+
+    public:
+        Face(FaceVertex V1, FaceVertex V2, FaceVertex V3) : v1(V1), v2(V2), v3(V3) {}
+        friend std::ostream& operator<<(std::ostream& os, const Face& f) {
+            return os << f.v1 << f.v2 << f.v3;
+        }
+};
+
 class Model
 {
     public:
@@ -20,7 +47,8 @@ class Model
 
     private:
         std::vector<Vec3> vertex_list;
-        std::vector<int> face_index_list;
+        std::vector<Vec2> texture_list;
+        std::vector<Face> face_list;
 
         float max_x;
         float min_x;
