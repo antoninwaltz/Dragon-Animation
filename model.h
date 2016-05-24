@@ -37,9 +37,9 @@ class Face
         friend std::ostream& operator<<(std::ostream& os, const Face& f) {
             return os << f.v1 << f.v2 << f.v3;
         }
-        FaceVertex getV1() { return v1; }
-        FaceVertex getV2() { return v2; }
-        FaceVertex getV3() { return v3; }
+        int getV1() { return v1.getVertexIndex(); }
+        int getV2() { return v2.getVertexIndex(); }
+        int getV3() { return v3.getVertexIndex(); }
 };
 
 class Model
@@ -51,8 +51,14 @@ class Model
         std::vector<Face> getFaceList() {
             return this->face_list;
         }
+        Face getFace(int i) {
+            return this->face_list[i];
+        }
         std::vector<Vec3> getVertexList() {
             return this->vertex_list;
+        }
+        Vec3 getVertex(int i) {
+            return this->vertex_list[i];
         }
 
     private:
