@@ -45,8 +45,11 @@ class Face
 class Model
 {
     public:
+        Model();
         void loadFile(const char *filename);
-        void saveModel();
+        void display();
+        void updateScale();
+        void updatePos();
         void printVertex();
         std::vector<Face> getFaceList() {
             return this->face_list;
@@ -72,6 +75,9 @@ class Model
         float min_y;
         float max_z;
         float min_z;
+
+        float scale, angle;
+        Vec3 center;
 };
 
 #endif

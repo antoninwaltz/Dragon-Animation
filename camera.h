@@ -13,7 +13,7 @@ class Camera
         /* Camera constructor */
         Camera()
         {
-            eyePos = Vec3(0.0f, 0.0f, -1.0f);
+            eyePos = Vec3(0.0f, 0.0f, 5.0f);
             centerPos = Vec3(0.0f, 0.0f, 0.0f);
             upVector = Vec3(0.0f, 1.0f, 0.0f);
         }
