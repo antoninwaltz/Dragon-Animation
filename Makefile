@@ -7,7 +7,7 @@ LIBS=-lassimp
 TARGET=IN55.exe
 
 SOURCES=main.cpp\
-		model.cpp
+		scene.cpp
 
 OBJECTS=$(SOURCES:.cpp=.o)
 
