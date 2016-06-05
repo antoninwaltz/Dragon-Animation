@@ -10,15 +10,10 @@
 
 #include <scene.h>
 #include <camera.h>
-#include <vectors.h>
 
-const struct aiScene* scene;
-aiVector3D scene_min, scene_max, scene_center;
-
+SceneHandler scene;
 
 Camera c;
-
-float angle = 0;
 
 /* Initialize OpenGL */
 void initGL() {
@@ -38,7 +33,6 @@ void initGL() {
 
 void display()
 {
-    float scale;
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glMatrixMode(GL_MODELVIEW);
 
@@ -47,17 +41,7 @@ void display()
     glLoadIdentity();
     c.updateCamera();
 
-    scale= scene_max.x-scene_min.x;
-    scale= max(scene_max.y - scene_min.y,scale);
-    scale= max(scene_max.z - scene_min.z,scale);
-    scale= 2.f / scale;
-    glScalef(scale, scale, scale);
-
-    glTranslatef( -scene_center.x, -scene_center.y, -scene_center.z );
-
-    angle += 0.9;
-    glRotatef(angle, 0, 1, 0);
-    recursive_render(scene, scene->mRootNode);
+    scene.render();
 
     glutSwapBuffers();
 }
@@ -81,16 +65,11 @@ void reshape(GLsizei width, GLsizei height) {
 int main(int argc, char** argv)
 {
     c = Camera();
+    scene = SceneHandler();
 
-    scene = aiImportFile(argv[1],aiProcessPreset_TargetRealtime_MaxQuality);
-
-    if (!scene) {
+    if (scene.load_file(argv[1])) {
         return 1;
     }
-    get_bounding_box(scene, &scene_min,&scene_max);
-    scene_center.x = (scene_min.x + scene_max.x) / 2.0f;
-    scene_center.y = (scene_min.y + scene_max.y) / 2.0f;
-    scene_center.z = (scene_min.z + scene_max.z) / 2.0f;
 
     glutInit(&argc, argv);
     glutInitDisplayMode(GLUT_RGB | GLUT_DOUBLE | GLUT_DEPTH);
@@ -102,7 +81,6 @@ int main(int argc, char** argv)
     initGL();
     glutTimerFunc(0, timer, 0);
     glutMainLoop();
-    aiReleaseImport(scene);
     return 0;
 }
 

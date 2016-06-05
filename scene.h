@@ -8,8 +8,20 @@
 #define min(x,y) (x<y?x:y)
 #define max(x,y) (y>x?y:x)
 
-void recursive_render (const struct aiScene *sc, const struct aiNode* nd);
-void get_bounding_box_for_node (const struct aiScene *sc, const aiNode* nd, aiVector3D* min, aiVector3D* max, aiMatrix4x4* trafo);
-void get_bounding_box (const struct aiScene *sc, aiVector3D* min, aiVector3D* max);
+class SceneHandler
+{
+    public:
+        virtual ~SceneHandler();
+        bool load_file (char * fName);
+        void render();
+        void recursive_render (const struct aiNode* nd);
+        void get_bounding_box_for_node (const aiNode* nd, aiMatrix4x4* trafo);
+        void get_bounding_box ();
+
+    private:
+        const struct aiScene* scene;
+        aiVector3D scene_min, scene_max, scene_center;
+        float scale, angle;
+};
 
 #endif

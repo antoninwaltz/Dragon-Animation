@@ -13,8 +13,45 @@
 
 #include <scene.h>
 
+SceneHandler::~SceneHandler() {
+    aiReleaseImport(scene);
+}
 
-void recursive_render (const struct aiScene *sc, const struct aiNode* nd)
+bool SceneHandler::load_file(char *fName) {
+    scene = aiImportFile(fName,aiProcessPreset_TargetRealtime_MaxQuality);
+
+    if (!scene) {
+        std::cerr << "Error importing file" << std::endl;
+        return 1;
+    }
+    get_bounding_box();
+    scene_center.x = (scene_min.x + scene_max.x) / 2.0f;
+    scene_center.y = (scene_min.y + scene_max.y) / 2.0f;
+    scene_center.z = (scene_min.z + scene_max.z) / 2.0f;
+
+    float tmp = 0;
+    tmp = scene_max.x-scene_min.x;
+    tmp = max(scene_max.y - scene_min.y,tmp);
+    tmp = max(scene_max.z - scene_min.z,tmp);
+    scale = 2.f / tmp;
+
+    angle = 0;
+
+    return 0;
+}
+
+void SceneHandler::render() {
+    glScalef(scale, scale, scale);
+
+    glTranslatef( -scene_center.x, -scene_center.y, -scene_center.z );
+
+    angle += 0.9;
+    glRotatef(angle, 0, 1, 0);
+    recursive_render(scene->mRootNode);
+
+}
+
+void SceneHandler::recursive_render (const struct aiNode* nd)
 {
     unsigned int i;
     unsigned int n = 0, t;
@@ -27,7 +64,7 @@ void recursive_render (const struct aiScene *sc, const struct aiNode* nd)
 
     // draw all meshes assigned to this node
     for (; n < nd->mNumMeshes; ++n) {
-        const struct aiMesh* mesh = sc->mMeshes[nd->mMeshes[n]];
+        const struct aiMesh* mesh = scene->mMeshes[nd->mMeshes[n]];
 
         // apply_material(sc->mMaterials[mesh->mMaterialIndex]);
 
@@ -66,15 +103,13 @@ void recursive_render (const struct aiScene *sc, const struct aiNode* nd)
 
     // draw all children
     for (n = 0; n < nd->mNumChildren; ++n) {
-        recursive_render(sc, nd->mChildren[n]);
+        recursive_render(nd->mChildren[n]);
     }
 
     glPopMatrix();
 }
 
-void get_bounding_box_for_node (const struct aiScene *sc, const aiNode* nd,
-        aiVector3D* min,
-        aiVector3D* max,
+void SceneHandler::get_bounding_box_for_node (const aiNode* nd,
         aiMatrix4x4* trafo
         ){
     aiMatrix4x4 prev;
@@ -84,38 +119,38 @@ void get_bounding_box_for_node (const struct aiScene *sc, const aiNode* nd,
     aiMultiplyMatrix4(trafo,&nd->mTransformation);
 
     for (; n < nd->mNumMeshes; ++n) {
-        const aiMesh* mesh = sc->mMeshes[nd->mMeshes[n]];
+        const aiMesh* mesh = scene->mMeshes[nd->mMeshes[n]];
         for (t = 0; t < mesh->mNumVertices; ++t) {
 
             aiVector3D tmp = mesh->mVertices[t];
             aiTransformVecByMatrix4(&tmp,trafo);
 
-            min->x = min(min->x,tmp.x);
-            min->y = min(min->y,tmp.y);
-            min->z = min(min->z,tmp.z);
+            scene_min.x = min(scene_min.x,tmp.x);
+            scene_min.y = min(scene_min.y,tmp.y);
+            scene_min.z = min(scene_min.z,tmp.z);
 
-            max->x = max(max->x,tmp.x);
-            max->y = max(max->y,tmp.y);
-            max->z = max(max->z,tmp.z);
+            scene_max.x = max(scene_max.x,tmp.x);
+            scene_max.y = max(scene_max.y,tmp.y);
+            scene_max.z = max(scene_max.z,tmp.z);
         }
     }
 
     for (n = 0; n < nd->mNumChildren; ++n) {
-        get_bounding_box_for_node(sc, nd->mChildren[n],min,max,trafo);
+        get_bounding_box_for_node(nd->mChildren[n], trafo);
     }
     *trafo = prev;
 }
 
 
 
-void get_bounding_box (const struct aiScene *sc, aiVector3D* min, aiVector3D* max)
+void SceneHandler::get_bounding_box ()
 {
     aiMatrix4x4 trafo;
     aiIdentityMatrix4(&trafo);
 
-    min->x = min->y = min->z =  1e10f;
-    max->x = max->y = max->z = -1e10f;
-    get_bounding_box_for_node(sc, sc->mRootNode,min,max,&trafo);
+    scene_min.x = scene_min.y = scene_min.z =  1e10f;
+    scene_max.x = scene_max.y = scene_max.z = -1e10f;
+    get_bounding_box_for_node(scene->mRootNode,&trafo);
 }
 
 
