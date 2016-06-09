@@ -1,3 +1,5 @@
+#ifndef __CAMERA_H__
+#define __CAMERA_H__
 #include <iostream>
 
 #include <GL/gl.h>
@@ -36,3 +38,4 @@ class Camera
         Vec3 getOrient();
 };
 
+#endif

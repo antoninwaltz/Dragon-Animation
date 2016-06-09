@@ -8,7 +8,8 @@ TARGET=IN55.exe
 
 SOURCES=main.cpp\
 		scene.cpp\
-		camera.cpp
+		camera.cpp\
+		bone.cpp
 
 OBJECTS=$(SOURCES:.cpp=.o)
 
