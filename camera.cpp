@@ -41,3 +41,23 @@ void Camera::calculateUp()
     upVector.y = s.z * v.x - s.x * v.z;
     upVector.z = s.x * v.y - s.y * v.x;
 }
+
+void Camera::setPos(Vec3 newPos)
+{
+    eyePos=newPos;
+}
+
+void Camera::setOrient(Vec3 newOri)
+{
+    centerPos=newOri;
+}
+
+Vec3 Camera::getPos()
+{
+    return eyePos;
+}
+
+Vec3 Camera::getOrient()
+{
+    return centerPos;
+}

@@ -26,5 +26,13 @@ class Camera
 
         /* Compute the current up vector */
         void calculateUp();
+
+        void setPos(Vec3 newPos);
+
+        void setOrient(Vec3 newOrient);
+
+        Vec3 getPos();
+
+        Vec3 getOrient();
 };
 

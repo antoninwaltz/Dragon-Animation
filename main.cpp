@@ -62,6 +62,33 @@ void reshape(GLsizei width, GLsizei height) {
     gluPerspective(45.0f, aspect, 0.1f, 100.0f);
 }
 
+void keyInput(unsigned char key, int x, int y){
+
+}
+
+void specialInput(int key, int x, int y){
+    Vec3 newPos;
+    switch(key){
+        case GLUT_KEY_UP : 
+                            newPos = c.getPos();
+                            newPos.y+=0.1;
+                            c.setPos(newPos);break;
+        case GLUT_KEY_DOWN :
+                            newPos = c.getPos();
+                            newPos.y-=0.1;
+                            c.setPos(newPos);break;
+        case GLUT_KEY_RIGHT : 
+                            newPos = c.getPos();
+                            newPos.x+=0.1;
+                            c.setPos(newPos);break;
+        case GLUT_KEY_LEFT :
+                            newPos = c.getPos();
+                            newPos.x-=0.1;
+                            c.setPos(newPos);break;
+        default : break;
+    }
+}
+
 int main(int argc, char** argv)
 {
     c = Camera();
@@ -76,6 +103,8 @@ int main(int argc, char** argv)
     glutInitWindowSize(640, 480);
     glutInitWindowPosition(50, 50);
     glutCreateWindow("IN55 - Animation rendering");
+    glutKeyboardFunc(keyInput);
+    glutSpecialFunc(specialInput);
     glutDisplayFunc(display);
     glutReshapeFunc(reshape);
     initGL();
