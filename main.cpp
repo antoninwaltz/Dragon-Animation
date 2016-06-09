@@ -15,6 +15,15 @@ SceneHandler scene;
 
 Camera c;
 
+float d_angle_x =0.0f;
+float d_angle_y =0.0f;
+
+int xorigin = 0;
+int yorigin = 0;
+
+bool is_l_clicked = false;
+bool is_r_clicked = false;
+
 /* Initialize OpenGL */
 void initGL() {
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);               // Set background color to black and opaque
@@ -95,6 +104,22 @@ void specialInput(int key, int x, int y){
 void mouseInput(int button, int state, int x, int y){
     Vec3 newPos;
     switch(button){
+        case GLUT_LEFT_BUTTON : 
+                                if(state==GLUT_UP){
+                                    is_l_clicked=false;
+                                }else if(state == GLUT_DOWN){
+                                    is_l_clicked=true;
+                                    xorigin=x;
+                                }
+                                break;
+        case GLUT_RIGHT_BUTTON : 
+                                if(state==GLUT_UP){
+                                    is_r_clicked=false;
+                                }else if(state == GLUT_DOWN){
+                                    is_r_clicked=true;
+                                    yorigin=y;
+                                }
+                                break;
         case 3 :
                 newPos = c.getPos();
                 newPos.z-=0.1;
@@ -104,6 +129,30 @@ void mouseInput(int button, int state, int x, int y){
                 newPos.z+=0.1;
                 c.setPos(newPos);break;
         default : break;
+    }
+}
+
+/* Manage mouse move */ 
+void mouseMoveInput(int x, int y){
+    Vec3 newOri;
+    if(is_l_clicked){
+        //d_angle_y=(y-yorigin)*0.001f;
+        d_angle_x=(x-xorigin)*0.001f;
+
+        newOri=c.getOrient();
+        newOri.x+=d_angle_x;
+        //newOri.y+=d_angle_y;
+        c.setOrient(newOri);
+    }
+
+    if(is_r_clicked){
+        d_angle_y=(y-yorigin)*0.001f;
+        //d_angle_x=(x-xorigin)*0.001f;
+
+        newOri=c.getOrient();
+        //newOri.x+=d_angle_x;
+        newOri.y+=d_angle_y;
+        c.setOrient(newOri);
     }
 }
 
@@ -126,6 +175,7 @@ int main(int argc, char** argv)
     glutKeyboardFunc(keyInput);
     glutSpecialFunc(specialInput);
     glutMouseFunc(mouseInput);
+    glutMotionFunc(mouseMoveInput);
     glutDisplayFunc(display);
     glutReshapeFunc(reshape);
     initGL();
