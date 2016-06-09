@@ -1,7 +1,7 @@
 #include <bone.h>
 
-Bone::Bone(int id){
-	ID=id;
+Bone::Bone(aiString id){
+	Name=id;
 	nbVertice=0;
 	verticeIDList=(int*)malloc(nbVertice*sizeof(int));
 }

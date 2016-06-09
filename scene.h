@@ -5,6 +5,9 @@
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
 
+#include <vertice.h>
+#include <bone.h>
+
 #define min(x,y) (x<y?x:y)
 #define max(x,y) (y>x?y:x)
 
@@ -13,6 +16,7 @@ class SceneHandler
     public:
         virtual ~SceneHandler();
         bool load_file (char * fName);
+        void initVerticeList();
         void render();
         void recursive_render (const struct aiNode* nd);
         void get_bounding_box_for_node (const aiNode* nd, aiMatrix4x4* trafo);
@@ -20,6 +24,9 @@ class SceneHandler
 
     private:
         const struct aiScene* scene;
+        Vertice* verticeList;
+        Bone* boneList;
+        int nbVert, nbBone;
         aiVector3D scene_min, scene_max, scene_center;
         float scale, angle;
 };

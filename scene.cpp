@@ -40,12 +40,59 @@ bool SceneHandler::load_file(char *fName) {
     return 0;
 }
 
+void SceneHandler::initVerticeList(){
+    const struct aiNode* nd=scene->mRootNode;
+    unsigned int n=0,t,u;
+
+    nbVert=0;
+    nbBone=0;
+    verticeList = (Vertice*)malloc(sizeof(Vertice));
+    boneList = (Bone*)malloc(sizeof(Bone));
+
+    for (; n < nd->mNumMeshes; ++n) {
+        const struct aiMesh* mesh = scene->mMeshes[nd->mMeshes[n]];
+        struct aiBone** bones = mesh->mBones;
+        for (t = 0; t < mesh->mNumBones; ++t) {
+            Bone tmpBone(bones[t]->mName);
+            for(u=0; u<bones[t]->mNumWeights; u++){
+                int vertID= bones[t]->mWeights[u].mVertexId;
+                float weight =bones[t]->mWeights[u].mWeight;
+                tmpBone.addVertice(vertID);
+                int s=0;
+                while (s<nbVert && s!=-1){
+                    if(verticeList[s].getID()!=vertID){
+                        s++;
+                    }else{
+                        verticeList[s].setBones(bones[t]->mName,weight);
+                        s=-1;
+                    }
+                }
+
+                if(s!=-1){
+                    Vertice* tmpVertList = (Vertice*)realloc(verticeList,(nbVert+1)*sizeof(Vertice));
+                    Vertice newVert(vertID,mesh->mVertices[vertID]);
+                    newVert.setBones(bones[t]->mName,weight);
+                    verticeList=tmpVertList;
+                    verticeList[nbVert]=newVert;
+                    nbVert++;
+                }
+
+            }
+            Bone* tmpBoneList = (Bone*)realloc(boneList,(nbBone+1)*sizeof(Bone));
+            boneList=tmpBoneList;
+            boneList[nbBone]=tmpBone;
+            nbBone++;            
+        }
+
+     }
+}
+
 void SceneHandler::render() {
     glScalef(scale, scale, scale);
 
     glTranslatef( -scene_center.x, -scene_center.y, -scene_center.z );
 
-    //angle += 0.9;
+    angle += 0.9;
     glRotatef(angle, 0, 1, 0);
     recursive_render(scene->mRootNode);
 
