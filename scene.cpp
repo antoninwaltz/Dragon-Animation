@@ -44,10 +44,6 @@ void SceneHandler::initVerticeList(){
     const struct aiNode* nd=scene->mRootNode;
     unsigned int n=0,t,u;
 
-    nbVert=0;
-    nbBone=0;
-    verticeList = (Vertice*)malloc(sizeof(Vertice));
-    boneList = (Bone*)malloc(sizeof(Bone));
     meshList = (Mesh*)malloc(nd->mNumMeshes*sizeof(Mesh));
     for (; n < nd->mNumMeshes; ++n) {
         const struct aiMesh* mesh = scene->mMeshes[nd->mMeshes[n]];

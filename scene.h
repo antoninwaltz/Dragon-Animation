@@ -8,6 +8,8 @@
 #include <vertice.h>
 #include <bone.h>
 #include <mesh.h>
+#include <interpolation.h>
+#include <keyframe.h>
 
 #define min(x,y) (x<y?x:y)
 #define max(x,y) (y>x?y:x)
@@ -25,7 +27,7 @@ class SceneHandler
 
     private:
         const struct aiScene* scene;
-        Vertice* verticeList;
+        Mesh* meshList;
         aiVector3D scene_min, scene_max, scene_center;
         float scale, angle;
 };
