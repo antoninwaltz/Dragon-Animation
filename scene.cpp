@@ -36,7 +36,7 @@ bool SceneHandler::load_file(char *fName) {
     scale = 2.f / tmp;
 
     angle = 0;
-
+    initVerticeList();
     return 0;
 }
 
@@ -48,41 +48,27 @@ void SceneHandler::initVerticeList(){
     nbBone=0;
     verticeList = (Vertice*)malloc(sizeof(Vertice));
     boneList = (Bone*)malloc(sizeof(Bone));
-
+    meshList = (Mesh*)malloc(nd->mNumMeshes*sizeof(Mesh));
     for (; n < nd->mNumMeshes; ++n) {
         const struct aiMesh* mesh = scene->mMeshes[nd->mMeshes[n]];
+        Mesh tmpMesh(mesh->mNumVertices,mesh->mNumBones);
+
         struct aiBone** bones = mesh->mBones;
         for (t = 0; t < mesh->mNumBones; ++t) {
+            for(u=0; u<mesh->mNumVertices; u++){
+               Vertice newVert(u,mesh->mVertices[u]);
+               tmpMesh.addVertice(newVert,u); 
+            }
             Bone tmpBone(bones[t]->mName);
             for(u=0; u<bones[t]->mNumWeights; u++){
                 int vertID= bones[t]->mWeights[u].mVertexId;
                 float weight =bones[t]->mWeights[u].mWeight;
                 tmpBone.addVertice(vertID);
-                int s=0;
-                while (s<nbVert && s!=-1){
-                    if(verticeList[s].getID()!=vertID){
-                        s++;
-                    }else{
-                        verticeList[s].setBones(bones[t]->mName,weight);
-                        s=-1;
-                    }
-                }
-
-                if(s!=-1){
-                    Vertice* tmpVertList = (Vertice*)realloc(verticeList,(nbVert+1)*sizeof(Vertice));
-                    Vertice newVert(vertID,mesh->mVertices[vertID]);
-                    newVert.setBones(bones[t]->mName,weight);
-                    verticeList=tmpVertList;
-                    verticeList[nbVert]=newVert;
-                    nbVert++;
-                }
-
+                tmpMesh.setVertBone(vertID,bones[t]->mName,weight);
             }
-            Bone* tmpBoneList = (Bone*)realloc(boneList,(nbBone+1)*sizeof(Bone));
-            boneList=tmpBoneList;
-            boneList[nbBone]=tmpBone;
-            nbBone++;            
+            tmpMesh.addBone(tmpBone,t);           
         }
+        meshList[n]=tmpMesh;
 
      }
 }
