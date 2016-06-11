@@ -73,7 +73,10 @@ void reshape(GLsizei width, GLsizei height) {
 
 /* Manage ASCII key input */
 void keyInput(unsigned char key, int x, int y){
-
+    switch(key){
+        case'i': scene.resetNumFrame();break;
+        default : break;
+    }
 }
 
 /* Manage non-ASCII key input */

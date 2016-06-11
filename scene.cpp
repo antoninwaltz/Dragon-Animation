@@ -12,6 +12,7 @@
 #include <assimp/postprocess.h>
 
 #include <scene.h>
+using namespace std;
 
 SceneHandler::~SceneHandler() {
     aiReleaseImport(scene);
@@ -93,6 +94,8 @@ void SceneHandler::render() {
     const aiNode *nd = scene->mRootNode;
     aiMatrix4x4 m = nd->mTransformation;
 
+    numFrame++;
+    cout<<"Frame "<<numFrame<<"\n";
     glScalef(scale, scale, scale);
 
     glTranslatef( -scene_center.x, -scene_center.y, -scene_center.z );
