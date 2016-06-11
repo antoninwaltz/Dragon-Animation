@@ -36,46 +36,51 @@ bool SceneHandler::load_file(char *fName) {
     scale = 2.f / tmp;
 
     angle = 0;
-    initVerticeList();
+    meshNumber = 0;
+    meshList = NULL;
+    initMeshList(scene->mRootNode);
     return 0;
 }
 
-void SceneHandler::initVerticeList(){
-    const struct aiNode* nd=scene->mRootNode;
-    unsigned int n=0,t,u;
+void SceneHandler::initMeshList(const aiNode* nd){
+    unsigned int i, j, k;
 
-    meshList = (Mesh*)malloc(nd->mNumMeshes*sizeof(Mesh));
-    for (; n < nd->mNumMeshes; ++n) {
-        const struct aiMesh* mesh = scene->mMeshes[nd->mMeshes[n]];
-        Mesh tmpMesh(mesh->mNumVertices,mesh->mNumBones);
-        for(u=0; u<mesh->mNumVertices; u++){
-            Vertice newVert(u,mesh->mVertices[u]);
-            tmpMesh.addVertice(newVert,u); 
+    meshList = (Mesh**) realloc(meshList, (nd->mNumMeshes + meshNumber) * sizeof(Mesh*));
+    for (i = 0; i < nd->mNumMeshes; ++i) {
+        const struct aiMesh* mesh = scene->mMeshes[nd->mMeshes[i]];
+        Mesh *newMesh = new Mesh(i, mesh->mNumVertices, mesh->mNumBones, mesh->mNumFaces);
+        for(j = 0; j < mesh->mNumVertices; j++){
+            Vertice *newVert = new Vertice(j, mesh->mVertices[j]);
+            if (mesh->mNormals != NULL) {
+                newMesh->addVertice(newVert, mesh->mNormals+j, j);
+            } else {
+                newMesh->addVertice(newVert, NULL, j);
+            }
+        }
+        for (j = 0; j < mesh->mNumFaces; ++j) {
+            const struct aiFace* face = &mesh->mFaces[j];
+            Face *newFace = new Face(face->mNumIndices);
+            for(k = 0; k < face->mNumIndices; k++) {
+                newFace->addIndex(face->mIndices[k]);
+            }
+            newMesh->addFace(newFace);
         }
         struct aiBone** bones = mesh->mBones;
-        for (t = 0; t < mesh->mNumBones; ++t) {            
-            Bone tmpBone(bones[t]->mName);
-            for(u=0; u<bones[t]->mNumWeights; u++){
-                int vertID= bones[t]->mWeights[u].mVertexId;
-                float weight =bones[t]->mWeights[u].mWeight;
-                tmpBone.addVertice(vertID);
-                tmpMesh.setVertBone(vertID,bones[t]->mName,weight);
+        for (j = 0; j < mesh->mNumBones; ++j) {
+            Bone *tmpBone = new Bone(bones[j]->mName);
+            for(k = 0; k<bones[j]->mNumWeights; k++){
+                int vertID= bones[j]->mWeights[k].mVertexId;
+                float weight =bones[j]->mWeights[k].mWeight;
+                tmpBone->addVertice(vertID);
+                newMesh->setVertBone(vertID,bones[j]->mName,weight);
             }
-            tmpMesh.addBone(tmpBone,t);           
+            newMesh->addBone(tmpBone, j);
         }
-        meshList[n]=tmpMesh;
-
-     }
-}
-
-void SceneHandler::render() {
-    glScalef(scale, scale, scale);
-
-    glTranslatef( -scene_center.x, -scene_center.y, -scene_center.z );
-
-    angle += 0.9;
-    glRotatef(angle, 0, 1, 0);
-    recursive_render(scene->mRootNode);
+        meshList[meshNumber++] = newMesh;
+    }
+    for (unsigned int n = 0; n < nd->mNumChildren; ++n) {
+        initMeshList(nd->mChildren[n]);
+    }
 
 }
 
@@ -83,61 +88,50 @@ void SceneHandler::resetNumFrame(){
     numFrame=0;
 }
 
-void SceneHandler::recursive_render (const struct aiNode* nd)
-{
-    unsigned int i;
-    unsigned int n = 0, t;
+void SceneHandler::render() {
+    int i, j, k;
+    const aiNode *nd = scene->mRootNode;
     aiMatrix4x4 m = nd->mTransformation;
 
-    // update transform
+    glScalef(scale, scale, scale);
+
+    glTranslatef( -scene_center.x, -scene_center.y, -scene_center.z );
+
+    angle += 0.9;
+    glRotatef(angle, 0, 1, 0);
+
+    // add root node transform matrix
     aiTransposeMatrix4(&m);
     glPushMatrix();
     glMultMatrixf((float*)&m);
 
-    // draw all meshes assigned to this node
-    for (; n < nd->mNumMeshes; ++n) {
-        const struct aiMesh* mesh = scene->mMeshes[nd->mMeshes[n]];
-
-        // apply_material(sc->mMaterials[mesh->mMaterialIndex]);
-
-        if(mesh->mNormals == NULL) {
-            glDisable(GL_LIGHTING);
-        } else {
-            glEnable(GL_LIGHTING);
+    // draw all meshes
+    for (i = 0; i < meshNumber; ++i) {
+        Mesh *my_mesh = meshList[i];
+        bool use_normal = false;
+        if (my_mesh->getNormal(0) != NULL) {
+            use_normal = true;
         }
 
-        for (t = 0; t < mesh->mNumFaces; ++t) {
-            const struct aiFace* face = &mesh->mFaces[t];
-            GLenum face_mode;
+        if(use_normal) {
+            glEnable(GL_LIGHTING);
+        } else {
+            glDisable(GL_LIGHTING);
+        }
 
-            switch(face->mNumIndices) {
-                case 1: face_mode = GL_POINTS; break;
-                case 2: face_mode = GL_LINES; break;
-                case 3: face_mode = GL_TRIANGLES; break;
-                default: face_mode = GL_POLYGON; break;
+        for (j = 0; j < my_mesh->getFaceNumber(); j++) {
+            Face *f = my_mesh->getFace(j);
+            glBegin(f->getType());
+            for (k = 0; k < f->getIndexNumber(); k++) {
+                int index = f->getIndex(k);
+                if (my_mesh->getNormal(index) != NULL) {
+                    glNormal3fv(&my_mesh->getNormal(index)->x);
+                }
+                glVertex3fv(&(my_mesh->getVertex(index)->getPosition()).x);
             }
-
-            glBegin(face_mode);
-
-            for(i = 0; i < face->mNumIndices; i++) {
-                int index = face->mIndices[i];
-                if(mesh->mColors[0] != NULL)
-                    glColor4fv((GLfloat*)&mesh->mColors[0][index]);
-                if(mesh->mNormals != NULL)
-                    glNormal3fv(&mesh->mNormals[index].x);
-                glVertex3fv(&mesh->mVertices[index].x);
-            }
-
             glEnd();
         }
-
     }
-
-    // draw all children
-    for (n = 0; n < nd->mNumChildren; ++n) {
-        recursive_render(nd->mChildren[n]);
-    }
-
     glPopMatrix();
 }
 

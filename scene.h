@@ -19,16 +19,18 @@ class SceneHandler
     public:
         virtual ~SceneHandler();
         bool load_file (char * fName);
-        void initVerticeList();
+        void initMeshList(const aiNode *nd);
         void render();
-        void recursive_render (const struct aiNode* nd);
         void get_bounding_box_for_node (const aiNode* nd, aiMatrix4x4* trafo);
         void get_bounding_box ();
         void resetNumFrame();
+        int getMeshNumber() { return meshNumber; };
+
 
     private:
         const struct aiScene* scene;
-        Mesh* meshList;
+        Mesh **meshList;
+        int meshNumber;
         aiVector3D scene_min, scene_max, scene_center;
         float scale, angle;
         int numFrame;
