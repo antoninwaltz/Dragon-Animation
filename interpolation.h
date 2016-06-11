@@ -39,16 +39,32 @@ class Interpolation{
 			dist=indexNextKeyframe - indexPrevKeyframe;
 		};
 
-		float getPrevFactor(int currentIndex){
-			float fact;
-			fact=(float)(1-((currentIndex-indexPrevKeyframe)/dist));
-			return fact;
-		};
-
-		float getNextFactor(int currentIndex){
+		float getFactor(int currentIndex){
 			float fact;
 			fact=(float)((currentIndex-indexPrevKeyframe)/dist);
 			return fact;
 		};
+
+		aiQuaternion interpolateRot(int index){
+			aiQuaternion rot;
+			rot.Interpolate(rot,prevKeyframe.getRotation().mValue,nextKeyframe.getRotation().mValue, getFactor(index) );
+			return rot;
+		}
+
+		aiVector3D InterpolatePos(int index){
+			aiVector3D pos;
+			float t=getFactor(index);
+			pos= (1-t)*prevKeyframe.getPosition().mValue + t*nextKeyframe.getPosition().mValue;
+			return pos;
+		}
+
+		aiVector3D InterpolateScal(int index){
+			aiVector3D scal;
+			float t=getFactor(index);
+			scal= (1-t)*prevKeyframe.getScaling().mValue + t*nextKeyframe.getScaling().mValue;
+			return scal;
+		}
+
+
 };
 #endif

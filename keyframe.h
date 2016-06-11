@@ -31,5 +31,17 @@ class Keyframe{
 		Keyframe(){
 		};
 
+		aiQuatKey getRotation(){
+			return rotation;
+		};
+
+		aiVectorKey getPosition(){
+			return position;
+		};
+
+		aiVectorKey getScaling(){
+			return scaling;
+		};
+
 };
 #endif
