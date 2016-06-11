@@ -24,24 +24,24 @@ class Interpolation{
 
 	public:
 		Interpolation(Keyframe prev, Keyframe next, int prevI, int nextI){
-			prevKeyframe=prev;
-			nextKeyframe=next;
-			indexPrevKeyframe=prevI;
-			indexNextKeyframe=nextI;
-			dist=indexNextKeyframe - indexPrevKeyframe;
+			prevKeyframe = prev;
+			nextKeyframe = next;
+			indexPrevKeyframe = prevI;
+			indexNextKeyframe = nextI;
+			dist = indexNextKeyframe - indexPrevKeyframe;
 		};
 
 		void Update(Keyframe newK, int index){
-			prevKeyframe=nextKeyframe;
-			indexPrevKeyframe=indexNextKeyframe;
-			nextKeyframe=newK;
-			indexNextKeyframe=index;
-			dist=indexNextKeyframe - indexPrevKeyframe;
+			prevKeyframe = nextKeyframe;
+			indexPrevKeyframe = indexNextKeyframe;
+			nextKeyframe = newK;
+			indexNextKeyframe = index;
+			dist = indexNextKeyframe - indexPrevKeyframe;
 		};
 
 		float getFactor(int currentIndex){
 			float fact;
-			fact=(float)((currentIndex-indexPrevKeyframe)/dist);
+			fact = (float)((currentIndex-indexPrevKeyframe)/dist);
 			return fact;
 		};
 
@@ -53,15 +53,15 @@ class Interpolation{
 
 		aiVector3D InterpolatePos(int index){
 			aiVector3D pos;
-			float t=getFactor(index);
+			float t = getFactor(index);
 			pos= (1-t)*prevKeyframe.getPosition().mValue + t*nextKeyframe.getPosition().mValue;
 			return pos;
 		}
 
 		aiVector3D InterpolateScal(int index){
 			aiVector3D scal;
-			float t=getFactor(index);
-			scal= (1-t)*prevKeyframe.getScaling().mValue + t*nextKeyframe.getScaling().mValue;
+			float t = getFactor(index);
+			scal = (1-t)*prevKeyframe.getScaling().mValue + t*nextKeyframe.getScaling().mValue;
 			return scal;
 		}
 

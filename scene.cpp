@@ -48,13 +48,12 @@ void SceneHandler::initVerticeList(){
     for (; n < nd->mNumMeshes; ++n) {
         const struct aiMesh* mesh = scene->mMeshes[nd->mMeshes[n]];
         Mesh tmpMesh(mesh->mNumVertices,mesh->mNumBones);
-
+        for(u=0; u<mesh->mNumVertices; u++){
+            Vertice newVert(u,mesh->mVertices[u]);
+            tmpMesh.addVertice(newVert,u); 
+        }
         struct aiBone** bones = mesh->mBones;
-        for (t = 0; t < mesh->mNumBones; ++t) {
-            for(u=0; u<mesh->mNumVertices; u++){
-               Vertice newVert(u,mesh->mVertices[u]);
-               tmpMesh.addVertice(newVert,u); 
-            }
+        for (t = 0; t < mesh->mNumBones; ++t) {            
             Bone tmpBone(bones[t]->mName);
             for(u=0; u<bones[t]->mNumWeights; u++){
                 int vertID= bones[t]->mWeights[u].mVertexId;
