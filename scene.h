@@ -24,6 +24,7 @@ class SceneHandler
         void get_bounding_box_for_node (const aiNode* nd, aiMatrix4x4* trafo);
         void get_bounding_box ();
         void resetNumFrame();
+        void activateAnimation(bool b){isAnimating=b;};
         int getMeshNumber() { return meshNumber; };
 
 
@@ -34,6 +35,7 @@ class SceneHandler
         aiVector3D scene_min, scene_max, scene_center;
         float scale, angle;
         int numFrame;
+        bool isAnimating;
 };
 
 #endif

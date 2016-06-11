@@ -39,6 +39,7 @@ bool SceneHandler::load_file(char *fName) {
     angle = 0;
     meshNumber = 0;
     meshList = NULL;
+    isAnimating=false;
     initMeshList(scene->mRootNode);
     return 0;
 }
@@ -94,8 +95,17 @@ void SceneHandler::render() {
     const aiNode *nd = scene->mRootNode;
     aiMatrix4x4 m = nd->mTransformation;
 
-    numFrame++;
-    cout<<"Frame "<<numFrame<<"\n";
+    if(isAnimating){
+        if(numFrame<scene->mAnimations[0]->mDuration){
+            numFrame++;
+            cout<<"Frame "<<numFrame<<"\n"; 
+        }else{
+            isAnimating=false;
+        }
+        
+    }
+    
+    
     glScalef(scale, scale, scale);
 
     glTranslatef( -scene_center.x, -scene_center.y, -scene_center.z );
