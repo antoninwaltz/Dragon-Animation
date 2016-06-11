@@ -79,6 +79,10 @@ void SceneHandler::render() {
 
 }
 
+void SceneHandler::resetNumFrame(){
+    numFrame=0;
+}
+
 void SceneHandler::recursive_render (const struct aiNode* nd)
 {
     unsigned int i;

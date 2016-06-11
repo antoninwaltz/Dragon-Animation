@@ -24,12 +24,14 @@ class SceneHandler
         void recursive_render (const struct aiNode* nd);
         void get_bounding_box_for_node (const aiNode* nd, aiMatrix4x4* trafo);
         void get_bounding_box ();
+        void resetNumFrame();
 
     private:
         const struct aiScene* scene;
         Mesh* meshList;
         aiVector3D scene_min, scene_max, scene_center;
         float scale, angle;
+        int numFrame;
 };
 
 #endif
