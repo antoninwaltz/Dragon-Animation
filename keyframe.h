@@ -14,34 +14,34 @@
 #include <bone.h>
 
 class Keyframe{
-	private:
-		int index;
-		aiVectorKey position;
-		aiVectorKey scaling;
-		aiQuatKey rotation;
-		
-	public:
-		Keyframe(int i,aiVectorKey scal,aiQuatKey rot, aiVectorKey pos){
-			index=i;
-			scaling=scal;
-			rotation=rot;
-			position=pos;
-		};
+    private:
+        int index;
+        aiVectorKey position;
+        aiVectorKey scaling;
+        aiQuatKey rotation;
 
-		Keyframe(){
-		};
+    public:
+        Keyframe(int i,aiVectorKey scal,aiQuatKey rot, aiVectorKey pos){
+            index=i;
+            scaling=scal;
+            rotation=rot;
+            position=pos;
+        };
 
-		aiQuatKey getRotation(){
-			return rotation;
-		};
+        Keyframe(){
+        };
 
-		aiVectorKey getPosition(){
-			return position;
-		};
+        aiQuatKey getRotation(){
+            return rotation;
+        };
 
-		aiVectorKey getScaling(){
-			return scaling;
-		};
+        aiVectorKey getPosition(){
+            return position;
+        };
+
+        aiVectorKey getScaling(){
+            return scaling;
+        };
 
 };
 #endif
