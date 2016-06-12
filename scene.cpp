@@ -96,10 +96,10 @@ void SceneHandler::initMeshList(const aiNode* nd){
             if (p != NULL) tmpBone = new Bone(bones[j]->mName, p->mName);
             else tmpBone = new Bone(bones[j]->mName, aiString(""));
             for(k = 0; k < bones[j]->mNumWeights; k++){
-                int vertID= bones[j]->mWeights[k].mVertexId;
+                int vertID = bones[j]->mWeights[k].mVertexId;
                 float weight =bones[j]->mWeights[k].mWeight;
                 tmpBone->addVertice(vertID);
-                newMesh->setVertBone(vertID,bones[j]->mName,weight);
+                newMesh->setVertBone(vertID, bones[j]->mName, weight);
             }
             newMesh->addBone(tmpBone, j);
         }

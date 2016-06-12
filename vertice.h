@@ -11,12 +11,15 @@
 
 #include <vectors.h>
 
+#define MAX_BONES 4
+
 class Vertice {
     private:
         int ID;
         aiVector3D position;
-        aiString bonesName[4];
-        float bonesWeight[4];
+        aiString bonesName[MAX_BONES];
+        int numBone;
+        float bonesWeight[MAX_BONES];
 
     public:
         /* Constructor */
@@ -25,20 +28,17 @@ class Vertice {
             int i;
             ID=id;
             position=pos;
-            for(i=0;i<4;i++){
-                bonesName[i]=aiString();
-                bonesWeight[i]=0.0f;
+            for(i = 0; i < MAX_BONES; i++){
+                bonesName[i] = aiString();
+                bonesWeight[i] = 0.0f;
             }
+            numBone = 0;
         };
 
         void setBones(aiString boneID, float weight){
-            int i=0;
-            while (bonesName[i].length!=0 && i<4){
-                i++;
-            }
-            if(i<4){
-                bonesName[i]=boneID;
-                bonesWeight[i]=weight;
+            if(numBone < MAX_BONES){
+                bonesName[numBone]=boneID;
+                bonesWeight[numBone++]=weight;
             }
         };
 
@@ -51,6 +51,8 @@ class Vertice {
         aiVector3D &getPosition(){return position;};
 
         aiString* getBonesID() { return bonesName; };
+
+        int getBoneNumber() { return numBone; };
 
         float* getBonesWeight(){return bonesWeight;};
 

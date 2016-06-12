@@ -152,10 +152,9 @@ class Mesh
             aiVector3D* trans = new aiVector3D();
             aiVector3D* scal = new aiVector3D();
             aiQuaternion* rot = new aiQuaternion();
-            for(int i = 0; i < 4; i++){
+            for(int i = 0; i < vert->getBoneNumber(); i++){
                 int j = 0;
-                std::cout << "TROLL\n";
-                std::cout << "GUY" << bones[i].C_Str();
+                std::cout << "Bone: " << bones[i].C_Str() << "\n";
                 while (boneStateList[j]->getName() != bones[i] && j < boneNb) {
                     j++;
                 }
