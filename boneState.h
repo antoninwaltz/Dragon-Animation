@@ -24,27 +24,27 @@ class BoneState{
 		VectInterpolation* scalInter;
 		RotInterpolation* rotInter;
 	public:
-		BoneState(aiString* name){
-			boneName=name;			
+		BoneState(aiString name){
+			boneName=name;
 		}
 
-		void initTrans(VectorKey* prev, VectorKey* next, float tps){
-			int newIndex = (int)next->getKey()-mTime*tps;
-			transInter=new VectInterpolation(prev,next,1,newIndex);
-			currTrans=transInter->InterpolateVect(1);
+		void initTrans(aiVectorKey* prev, aiVectorKey* next, float tps){
+			int newIndex = (int)next->mTime*tps;
+			transInter = new VectInterpolation(*prev, *next, 1, newIndex);
+			currTrans = transInter->InterpolateVect(1);
 		}
 
-		void initScal(VectorKey* prev, VectorKey* next, float tps){
-			int newIndex = (int)next->getKey()-mTime*tps;
-			scalInter=new VectInterpolation(prev,next,1,newIndex);
-			currScale=scalInter->InterpolateVect(1);
+		void initScal(aiVectorKey* prev, aiVectorKey* next, float tps){
+			int newIndex = (int)next->mTime * tps;
+			scalInter = new VectInterpolation(*prev, *next, 1, newIndex);
+			currScale = scalInter->InterpolateVect(1);
 		}
 
 
-		void initRot(RotKey* prev, RotKey* next, float tps){
-			int newIndex = (int)next->getKey()-mTime*tps;
-			rotInter=new RotInterpolation(prev,next,1,newIndex);
-			currRot=scalInter->InterpolateRot(1);			
+		void initRot(aiQuatKey* prev, aiQuatKey* next, float tps){
+			int newIndex = (int)next->mTime*tps;
+			rotInter = new RotInterpolation(*prev, *next, 1, newIndex);
+			currRot = rotInter->InterpolateRot(1);
 		}
 
 

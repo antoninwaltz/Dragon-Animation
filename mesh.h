@@ -98,7 +98,20 @@ class Mesh
                 }
                 animList[animNb++] = my_anim;
             }
+            initBoneStateList();
         };
+
+        void initBoneStateList() {
+            for(int i = 0; i < boneNb; i++) {
+                float tps = animList[0]->getTicksPerSecond();
+                BoneAnim *bAnim = animList[0]->getBoneAnim(boneList[i]->getName());
+                BoneState *tmpBoneState = new BoneState(boneList[i]->getName());
+                tmpBoneState->initTrans(bAnim->getTrans(), bAnim->getTrans()+1, tps);
+                tmpBoneState->initRot(bAnim->getRot(), bAnim->getRot()+1, tps);
+                tmpBoneState->initScal(bAnim->getScal(), bAnim->getScal()+1, tps);
+                boneStateList[i]=tmpBoneState;
+            }
+        }
 
         void render(bool anim) {
             int i, j;
@@ -141,6 +154,8 @@ class Mesh
             aiQuaternion* rot = new aiQuaternion();
             for(int i = 0; i < 4; i++){
                 int j = 0;
+                std::cout << "TROLL\n";
+                std::cout << "GUY" << bones[i].C_Str();
                 while (boneStateList[j]->getName() != bones[i] && j < boneNb) {
                     j++;
                 }
@@ -171,19 +186,6 @@ class Mesh
 
         void applyRot(Vertice* vert, aiQuaternion* rot){
             vert->setPosition(rot->Rotate(vert->getPosition()));
-        }
-
-        void initBoneStateList(int numFrame){
-            for(int i=0;i<boneNb;i++){
-                float tps =animList[animNb]->getTicksPerSecond();
-                BoneAnim* bAnim = animList[animNb]->getBoneAnim(boneList[i]->getName());
-                BoneState* tmpBoneState = new BoneState(boneList[i]->getName());
-                tmpBoneState->initTrans(bAnim->getTrans()[0],bAnim->getTrans()[1],tps);
-                tmpBoneState->initRot(bAnim->getRot()[0],bAnim->getRot()[1],tps);
-                tmpBoneState->initScal(bAnim->getScal()[0],bAnim->getScal()[1],tps);
-                boneStateList[i]=tmpBoneState;
-            }
-
         }
 
         void addVertice(Vertice *vert, aiVector3D *normal, int index) {

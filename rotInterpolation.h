@@ -48,9 +48,9 @@ class RotInterpolation{
             return fact;
         };
 
-        aiQuaternion interpolateRot(int index){
-            aiQuaternion rot;
-            rot.Interpolate(rot, prevKeyframe.mValue, nextKeyframe.mValue, getFactor(index) );
+        aiQuaternion *InterpolateRot(int index){
+            aiQuaternion *rot = new aiQuaternion();
+            rot->Interpolate(*rot, prevKeyframe.mValue, nextKeyframe.mValue, getFactor(index) );
             return rot;
         }
 

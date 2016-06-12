@@ -25,28 +25,28 @@ class Animation
             nbBoneAnim = nbBone;
             animationTime = t;
             ticksPerSecond = tps;
-            listBoneAnim = (BoneAnim**)malloc(nbBone*sizeof(BoneAnim*));
+            listBoneAnim = (BoneAnim**) malloc(nbBone*sizeof(BoneAnim*));
             currentindex=0;
         };
 
         void addBoneAnim(BoneAnim *bone){
             if(currentindex < nbBoneAnim){
-                listBoneAnim[currentindex]=bone;
+                listBoneAnim[currentindex] = bone;
                 currentindex++;
             }
         }
 
         BoneAnim* getBoneAnim(aiString boneName){
-        	int i=0;
-        	while(listBoneAnim[i]->getName()!=boneName && i<nbBoneAnim){
-        		i++
-        	}
+            int i=0;
+            while(listBoneAnim[i]->getName() != boneName && i < nbBoneAnim){
+                i++;
+            }
 
-        	if(i<nbBoneAnim){
-        		return listBoneAnim[i];
-        	}else{
-        		return NULL;
-        	}
+            if(i<nbBoneAnim){
+                return listBoneAnim[i];
+            }else{
+                return NULL;
+            }
         }
 
         float getDuration() { return animationTime; };

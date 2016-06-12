@@ -23,7 +23,7 @@ class VectInterpolation{
 
     public:
         VectInterpolation() {};
-        VectInterpolation(aiVectorKey prev, aiVectorKey next, int prevI, int nextI){
+        VectInterpolation(aiVectorKey &prev, aiVectorKey &next, int prevI, int nextI){
             prevKeyframe = prev;
             nextKeyframe = next;
             indexPrevKeyframe = prevI;
@@ -46,9 +46,9 @@ class VectInterpolation{
         };
 
         aiVector3D *InterpolateVect(int index){
-            aiVector3D* pos;
+            aiVector3D* pos = new aiVector3D();
             float t = getFactor(index);
-            pos= (1-t)*prevKeyframe.mValue + t*nextKeyframe.mValue;
+            *pos = (1-t)*prevKeyframe.mValue + t*nextKeyframe.mValue;
             return pos;
         }
 
