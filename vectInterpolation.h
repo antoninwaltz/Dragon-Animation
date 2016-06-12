@@ -52,6 +52,8 @@ class VectInterpolation{
             return pos;
         }
 
+        int getLastIndex(){return indexNextKeyframe;};
+
 
 
 };

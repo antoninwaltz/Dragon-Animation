@@ -102,8 +102,8 @@ class Mesh
         };
 
         void initBoneStateList() {
-            for(int i = 0; i < boneNb; i++) {
-                float tps = animList[0]->getTicksPerSecond();
+            float tps = animList[0]->getTicksPerSecond();
+            for(int i = 0; i < boneNb; i++) {                
                 BoneAnim *bAnim = animList[0]->getBoneAnim(boneList[i]->getName());
                 BoneState *tmpBoneState = new BoneState(boneList[i]->getName());
                 tmpBoneState->initTrans(bAnim->getTrans(), bAnim->getTrans()+1, tps);
@@ -111,6 +111,28 @@ class Mesh
                 tmpBoneState->initScal(bAnim->getScal(), bAnim->getScal()+1, tps);
                 boneStateList[i]=tmpBoneState;
             }
+        }
+
+        void updateBoneStateList(int numFrame){
+            float tps = animList[0]->getTicksPerSecond();
+            for(int i = 0; i < boneNb; i++) {                
+                BoneAnim *bAnim = animList[0]->getBoneAnim(boneList[i]->getName());
+                BoneState *tmpBoneState =  boneStateList[i];
+                if(tmpBoneState->getTransLastIndex()>= numFrame){
+                    tmpBoneState->updateTransLastKey(bAnim->getTrans()+tmpBoneState->getiT(),tps);
+                }
+                if(tmpBoneState->getScalLastIndex()>= numFrame){
+                    tmpBoneState->updateScalLastKey(bAnim->getScal()+tmpBoneState->getiS(),tps);
+                }
+                if(tmpBoneState->getRotLastIndex()>= numFrame){
+                    tmpBoneState->updateRotLastKey(bAnim->getRot()+tmpBoneState->getiR(),tps);
+                }
+                tmpBoneState->updateTransValue(numFrame);
+                tmpBoneState->updateScalValue(numFrame);
+                tmpBoneState->updateRotValue(numFrame);
+                boneStateList[i]=tmpBoneState;
+            }
+
         }
 
         void render(bool anim) {
