@@ -121,15 +121,7 @@ void SceneHandler::render() {
     const aiNode *nd = scene->mRootNode;
     aiMatrix4x4 m = nd->mTransformation;
 
-    if(isAnimating){
-        if(numFrame<scene->mAnimations[numAnimation-1]->mDuration){
-            numFrame++;
-            cout<<"Frame "<<numFrame<<"\n";
-        }else{
-            isAnimating=false;
-        }
-
-    }
+    
 
 
     glScalef(scale, scale, scale);
@@ -146,7 +138,20 @@ void SceneHandler::render() {
 
     // draw all meshes
     for (i = 0; i < meshNumber; ++i) {
+        
+            
         Mesh *my_mesh = meshList[i];
+        if(isAnimating){
+            if(numFrame<scene->mAnimations[numAnimation-1]->mDuration && numFrame!=0){
+                my_mesh->updateBoneStateList(numFrame);
+                numFrame++;
+            }else if (numFrame==0){
+                my_mesh->initBoneStateList(); 
+                numFrame++;
+            }else{
+                isAnimating=false;
+            }
+        }
         my_mesh->render(isAnimating);
     }
     glPopMatrix();
