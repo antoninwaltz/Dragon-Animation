@@ -24,12 +24,16 @@ class RotInterpolation{
         int dist;
 
     public:
-        Interpolation(RotKey prev, RotKey next, int prevI, int nextI){
+        RotInterpolation(RotKey prev, RotKey next, int prevI, int nextI){
             prevKeyframe = prev;
             nextKeyframe = next;
             indexPrevKeyframe = prevI;
             indexNextKeyframe = nextI;
             dist = indexNextKeyframe - indexPrevKeyframe;
+        };
+
+        RotInterpolation(){
+
         };
 
         void Update(RotKey newK, int index){

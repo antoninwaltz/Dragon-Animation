@@ -12,6 +12,7 @@
 #include <vectors.h>
 #include <vertice.h>
 #include <bone.h>
+#include <boneState.h>
 #include <animation.h>
 #include <scene.h>
 
@@ -55,6 +56,7 @@ class Mesh
         aiVector3D **normalList;
         Face **faceList;
         Bone **boneList;
+        BoneState **boneStateList;
         Animation **animList;
         int vertNb, boneNb, faceNb, animNb, maxFaceNb;
         int mesh_id;
@@ -70,6 +72,7 @@ class Mesh
             verticeList = (Vertice**)malloc(vertNb * sizeof(Vertice*));
             normalList = (aiVector3D**)malloc(vertNb * sizeof(aiVector3D*));
             boneList = (Bone**)malloc(boneNb * sizeof(Bone*));
+            boneStateList = (BoneState**)malloc(boneNb * sizeof(BoneState*));
             faceList = (Face**)malloc(faceSize * sizeof(Face*));
         };
 
@@ -83,7 +86,8 @@ class Mesh
                      BoneAnim *boneAnim = new BoneAnim(
                                  nodeAnim->mNumPositionKeys,
                                  nodeAnim->mNumRotationKeys,
-                                 nodeAnim->mNumScalingKeys);
+                                 nodeAnim->mNumScalingKeys,
+                                 getBone(j)->getName());
                      for (int k = 0; k < nodeAnim->mNumPositionKeys; k++)
                         boneAnim->addTrans(nodeAnim->mPositionKeys[k]);
                      for (int k = 0; k < nodeAnim->mNumRotationKeys; k++)
@@ -96,7 +100,7 @@ class Mesh
             }
          };
 
-        void render() {
+        void render(bool anim) {
             int i, j;
             bool use_normal = false;
             if (this->getNormal(0) != NULL) {
@@ -115,6 +119,9 @@ class Mesh
                 for (j = 0; j < f->getIndexNumber(); j++) {
                     //pushMatrix
                     int index = f->getIndex(j);
+                    if(anim){
+                       this->movePoint(this->getVertex(index)); 
+                    }                    
                     if (this->getNormal(index) != NULL) {
                         glNormal3fv(&this->getNormal(index)->x);
                     }
@@ -125,6 +132,45 @@ class Mesh
             }
 
         }
+
+        void movePoint(Vertice* vert){
+            aiString* bones[4]=vert->getBonesID();
+            float* bWeight[4]=vert->getBonesWeight();
+            aiVector3D* trans=new aiVector3D();
+            aiVector3D* scal=new aiVector3D();
+            aiQuaternion* rot=new aiQuaternion();
+            for(int i=0;i<4;i++){
+                int j=0;
+                while (boneStateList[j]->getName()!=bones[i] && j<boneNb) {
+                    j++;
+                }
+                if(j<boneNb){
+                    trans+=(bWeight[i]*boneStateList[j]->getCurrTrans());
+                    scal+=(bWeight[i]*boneStateList[j]->getCurrScal());
+                    rot=rot*(bWeight[i]*boneStateList[j]->getCurrRot());
+                }
+            }
+            applyScal(vert,scal);
+            applyRot(vert,rot);
+            applyTrans(vert,trans);
+        }
+
+        void applyTrans(Vertice* vert,aiVector3D* trans){
+            aiMatrix4x4 T;
+            T.Translation(trans,T);
+             vert->setPosition(vert->getPosition()*=T);
+        }
+
+        void applyScal(Vertice* vert, aiVector3D* scal){
+            aiMatrix4x4 S;
+            S.Scaling(scal,S);
+            vert->setPosition(vert->getPosition()*=S);
+        }
+
+        void applyRot(Vertice* vert, aiQuaternion* rot){
+            vert->setPosition(rot->Rotate(vert->getPosition()));
+        }
+
         void addVertice(Vertice *vert, aiVector3D *normal, int index) {
             if (index < vertNb) {
                 verticeList[index] = vert;

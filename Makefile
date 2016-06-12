@@ -1,4 +1,4 @@
-CC=clang++
+CC=g++
 FLAGS=-Wall -g
 
 INCLUDE=-I.

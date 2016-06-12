@@ -13,6 +13,7 @@
 class BoneAnim
 {
     private:
+    	aiString boneName;
         //Keyframe* keyframeList;
         aiVectorKey* transList;
         aiVectorKey* scalList;
@@ -31,7 +32,8 @@ class BoneAnim
           currentindex=0;
           }*/
 
-        BoneAnim(int nt, int nr, int ns){
+        BoneAnim(int nt, int nr, int ns, aiString name){
+            boneName=name;
             nbTrans=nt;
             nbRot=nr;
             nbScal=ns;

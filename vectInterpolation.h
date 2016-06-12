@@ -24,7 +24,7 @@ class VectInterpolation{
         int dist;
 
     public:
-        Interpolation(VectorKey prev, VectorKey next, int prevI, int nextI){
+        VectInterpolation(VectorKey prev, VectorKey next, int prevI, int nextI){
             prevKeyframe = prev;
             nextKeyframe = next;
             indexPrevKeyframe = prevI;

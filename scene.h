@@ -35,6 +35,7 @@ class SceneHandler
         void activateAnimation(bool b){if(numAnimation<=scene->mNumAnimations){isAnimating=b;}};
         int getMeshNumber() { return meshNumber; };
         void setNumAnimation(int n){numAnimation=n;};
+        bool getAnimating(){return isAnimating;};
 
 
 
