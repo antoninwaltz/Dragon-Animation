@@ -49,7 +49,10 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{Présentation du projet}
 \par
-Durant ce semestre en IN55, nous avons choisi le projet \textit{Animation d'un personnage 3D} parmi tout ceux proposés. Le personnage que nous avons choisi de modéliser et d'animer est un dragon. En effet, effectuer un rendu naturel de plusieurs mouvements (voler, marcher, s'asseoir) nous a sembler être un challenge intéressant.
+Durant ce semestre en IN55, nous avons choisi le projet \textit{Animation d'un personnage 3D} parmi tout ceux proposés. Le personnage que nous avons choisi de modéliser et d'animer est un dragon. En effet, effectuer un rendu naturel de plusieurs mouvements (voler, marcher, s'asseoir) nous a sembler être un challenge intéressant sur une créature de ce type.
+\par
+Le projet implique d'effectuer le rendu des animations avec OpenGL et d'implémenter une caméra libre dans la scène.
+ 
 
 \newpage
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -80,13 +83,9 @@ Chaque partie est composée de plusieurs os reliés entre eux. Chaque os dispose
 
 \newpage
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\chapter{Choix technologiques}
-\par
-OpenGl étant une librairie que nous ne connaissions pas, nous avions envie de faire les choses par nous même afin d'avoir une bonne compréhension de la programmation graphique.
-
-Initialement, il nous fallait rapidement une interface afin de visualiser le résultat des données que nous parsions. La librairie 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{Architecture du projet}
+\section{Choix technologiques}
+OpenGl étant une librairie que nous ne connaissions pas, nous avions envie de faire les choses par nous même afin d'avoir une bonne compréhension de la programmation graphique. Initialement, il nous fallait rapidement une interface afin de visualiser le résultat des données que nous parsions. La librairie s'est finalement révélé très pratique pour le chargement des modèles 3D.
 \section{La librairie Asset Import}
 \par
 Asset Import est une librairie libre sous licence BSD permettant d'importer dans une structure de données
@@ -123,11 +122,12 @@ On trouve généralement dans un fichier une scène contenant plusieurs objets.
 \item $Face$ : Une $Face$ contient une liste d'indice qui forment une face.
 \item $Animation$ : Une $Animation$ contient une liste de $BoneAnim$. Il y a autant de liste que de $Bone$.
 \item $BoneAnim$ : Une $BoneAnim$ contient 3 listes qui correspondent aux clés pour la translation, la rotation et la mise à l'échelle.
+\item $BoneState$ : Une $BoneAnim$ contient 3 listes qui correspondent aux clés pour la translation, la rotation et la mise à l'échelle.
 \end{itemize}
 
 \subsection{Caméra libre}
 \par
-La caméra libre s'utilise avec la souris. Le déplacement sur les axes $X$ et $Y$ s'effectue à la l'aide respectivement du bouton droit et gauche en maintenant le clic. Le déplacement en profondeur se fait grâce à la molette.
+La caméra libre s'utilise avec la souris. Le déplacement sur les axes $X$ et $Y$ s'effectue à la l'aide respectivement du bouton droit et gauche en maintenant le clic. Le déplacement en profondeur sur l'axe $Z$ se fait grâce à la molette.
 
 \newpage
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
