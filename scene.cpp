@@ -96,7 +96,7 @@ void SceneHandler::render() {
     aiMatrix4x4 m = nd->mTransformation;
 
     if(isAnimating){
-        if(numFrame<scene->mAnimations[0]->mDuration){
+        if(numFrame<scene->mAnimations[numAnimation-1]->mDuration){
             numFrame++;
             cout<<"Frame "<<numFrame<<"\n"; 
         }else{
@@ -136,11 +136,13 @@ void SceneHandler::render() {
             Face *f = my_mesh->getFace(j);
             glBegin(f->getType());
             for (k = 0; k < f->getIndexNumber(); k++) {
+                //pushMatrix
                 int index = f->getIndex(k);
                 if (my_mesh->getNormal(index) != NULL) {
                     glNormal3fv(&my_mesh->getNormal(index)->x);
                 }
                 glVertex3fv(&(my_mesh->getVertex(index)->getPosition()).x);
+                //popMatrix
             }
             glEnd();
         }

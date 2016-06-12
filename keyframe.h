@@ -43,5 +43,9 @@ class Keyframe{
             return scaling;
         };
 
+        int getIndex(){
+            return index;
+        }
+
 };
 #endif
