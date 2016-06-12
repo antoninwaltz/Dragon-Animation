@@ -49,26 +49,30 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{Présentation du projet}
 \par
+
 Durant ce semestre en IN55, nous avons choisi le projet \textit{Animation d'un personnage 3D} parmi tout ceux proposés. Le personnage que nous avons choisi de modéliser et d'animer est un dragon. Les raisons de ce choix sont multiples. 
 
 Tout d'abord, étant tous plus ou moins proche des communautés fan d'heroic-fantasy, le dragon est pour nous une figure emblématique de notre imaginaire. Ce projet nous laisser donc l'opportunité de donner vie à cette créature mythique. 
 
-Dans un second temps, c'est l'architecture du squelette qui nous a donné envie. Basiquement, un dragon c'est : une tête, un cou, un buste, des ailes, des pattes, et une queue. Cette structure nous a paru suffisament complexe pour que l'on puisse faire des animations intéressantes, mais reste relativement simple n'ayant pas forcément trop d'éléments du squelette qui se suivent.
+Dans un second temps, c'est l'architecture du squelette qui nous a donné envie. Basiquement, un dragon c'est : une tête, un cou, un buste, des ailes, des pattes, et une queue. Cette structure nous a paru suffisament complexe pour que l'on puisse faire des animations intéressantes, mais reste relativement simple n'ayant pas forcément trop d'éléments du squelette qui se suivent. Ainsi, nous avons voulut faire voler, marcher ou asseoir notre dragon.
 
 Nous develloperons dans ce rapport la structure de notre objet 3D. Nous parlerons aussi des technologies employées pour faire le rendu 3D et d el'architecture de notre programme. Enfin, nous ouvrirons des pistes d'évolution pour ce projet. 
+
 
 \newpage
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{Modélisation et armature}
 \par
-Nous avons effectué la modélisation du dragon sous Blender. Son armature se découpe en plusieurs parties indépendantes les unes des autres. Il y a :
+Nous avons effectué la modélisation du dragon sous Blender. Nous avons choisis ce logiciel pour plusieurs raisons. D'abord son accessibilité. Il est plus intuitif qu'une grande partie de ces concurrents (Maya ou 3DsMax) et permet donc d'avoir des résultats convaincants plus rapidemments. Ensuite il a le gros avantage d'être libre et gratuit, nous n'avons donc pas eu besoin de cracker un logiciel ou d'utiliser des licenses étudiantes contraignantes, et nous avons notamment le droit de montrer notre projet. Ceci est relativemment important pour nous, étant donné que nous sommes en dernière année, il est primordial de pouvoir partager nos réalisations dan sle cadre de recherche de stage ou d'emploi. Cependant, la suite d'Autodesk (Maya ou 3DsMax) étant majoritairement utilisée dans l'industrie et le divertissement, nous ne sommes pas formé sur ces logiciels en chisissant Blender.
+
+Son armature se découpe en plusieurs parties indépendantes les unes des autres. Il y a :
 \begin{itemize}
-\item La tête toute entière
-\item La machoire
-\item Le cou
-\item Le corps allant de la base du coup jusqu'à la queue
-\item Les ailes, indépendantes
-\item Les pattes, indépendantes également
+\item La tête toute entière (1 os)
+\item La machoire (1 os)
+\item Le cou (6 os)
+\item Le corps allant de la base du coup jusqu'à la queue (8 os)
+\item Les ailes, indépendantes (13 os par aile)
+\item Les pattes, indépendantes également (6 os par patte)
 \end{itemize}
 
 Chaque partie est composée de plusieurs os reliés entre eux. Chaque os dispose d'une position et d'une orientation qui dépends de celle de son parent. Sous Blender nous avons utilisé des Inverse Kinematics Bones pour les pattes et les ailes en particulier. En procédant ainsi, un mouvement fluide est obtenu.
@@ -87,17 +91,17 @@ Chaque partie est composée de plusieurs os reliés entre eux. Chaque os dispose
 \newpage
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{Architecture du projet}
-\section{La librairie Asset Import}
+\section{Choix technologiques}
+De part le sujet du projet, nous devions effectuer le rendu 3D à l'aide d'un programme alliant C++ et OpenGL. Il était conseillé de le faire avec Qt, un framework C++ qui offre diverses bibliothèques et widgets pratique pour mettre en oeuvre des applications C++. Cependant, après de nombreux problèmes du au différentes plateforme de dévellopement que nous possédions, nous avons temporairement utiliser la bibliothèque Assimp pour commencer à travailler. Elle c'est avérée très efficace, et nous avons donc pris la décision de continuer avec elle et de s'affranchir de Qt. 
+\section{La librairie Asset Import} 
 \par
-Asset Import est une librairie libre sous licence BSD permettant d'importer dans une structure de données
-un très grand nombre de fichiers 3D.
+Asset Import est une librairie libre sous licence BSD permettant d'importer dans une structure de données un très grand nombre de fichiers 3D. Elle offre plusieurs avantage, comme le fait d'avoir une API pour du C++ ou du C, ou encore de pouvoir exporter des modèles 3D. Elle est d'ailleurs la base d'une visionneuse 3D disponible sur windows : open3mod (qui est open source).
 \par
 Cela a permis de s'affranchir des opérations bas-niveau de parsage de fichier, ainsi que de la vérification 
 syntaxique du fichier 3D, tout en permettant de faire des tests avec un très grand nombre possible de 
-fichiers comme le Collada, le FBX, le format 3DS, ou encore simplement un fichier OBJ.
+fichiers comme le Collada, le FBX, le format 3DS, l'OBJ ou même si on le souhaite des format plus exotiques comme le BVH (un format de motion capture) ou le .3d (un format utilisé par le moteur de jeu Unreal).
 \par
-Ces fichiers supportant différentes fonctionnalités, il n'est toutefois pas toujours possible de visualiser
-les animations.
+Ces fichiers supportant différentes fonctionnalités, il n'est toutefois pas toujours possible de visualiser les animations.
 
 \section{Nos structures de données}
 \par
@@ -108,7 +112,7 @@ cette solution est très couteuse en terme de temps de calcul, puisqu'en plus de
 d'interpolation, il faut aussi gérer le parcours de structure complexe.
 \par
 Nous avons donc décider de faire nos propres structures de données, plus simples, et donc moins exhaustives,
-mais suffisantes pour les besoins du projet.
+mais suffisantes pour les besoins du projet, tout en nous donnant une maitrise totale sur les options de rendus et d'animations.
 \par
 Des fonctions de chargement sont donc appellées au lancement, récupérant les informations requises grâce à 
 assimp, pour pouvoir ensuite y accéder rapidement et simplement.
@@ -118,32 +122,51 @@ assimp, pour pouvoir ensuite y accéder rapidement et simplement.
 On trouve généralement dans un fichier une scène contenant plusieurs objets.
 
 \begin{itemize}
+\item $SceneHandler$ : C'est la classe centrale qui contient toutes les informations.
 \item $Mesh$ : Un $Mesh$ est une structure qui contient principalement une liste de $vertex$, de $bones$ et de $faces$. L'orientation de ces faces est définie par leur normale, comprise également dans le $mesh$.
 \item $Vertice$ : Un $Vertices$ contient un $vertex$ avec deux tableaux de taille 4. Le premier détaille les $Bones$ qui influent sur lui. Le second mesure le poids d'influence.
 \item $Bones$ : Un $Bones$ contient un $bone$ et la liste des $vertex$ sur lesquels il influe.
 \item $Face$ : Une $Face$ contient une liste d'indice qui forment une face.
 \item $Animation$ : Une $Animation$ contient une liste de $BoneAnim$. Il y a autant de liste que de $Bone$.
 \item $BoneAnim$ : Une $BoneAnim$ contient 3 listes qui correspondent aux clés pour la translation, la rotation et la mise à l'échelle.
+\item $BoneState$ : Une $BoneAnim$ contient 3 listes qui correspondent aux clés pour la translation, la rotation et la mise à l'échelle.
+\item $VectInterpolation et RotInterpolation$ : Ces deux classes s'occupe de l'interpolation des matrice de transformation entre deux KeyFrame (moment clé d'une animation)
 \end{itemize}
 
+\subsection{Caméra libre}
+\par
+La caméra libre dispose de 5 degrès de libertés. Tout d'abord les 3 translations de l'espace sont possibles. Ainsi les flèches du haut et bas nous permette de se déplacer sur l'axe y (axe vertical) pendant que celle de droite et gauche nous translate selon x (axe horizontale) enfin la molette de la souris controle le mouvement suivant z (la profondeur). Ensuite 2 rotations sont disponibles. Un click qauche souris maintenu suivit d'un déplacement permet de tourner autour de l'axe vertical tant que la même manipulation avec un click droit permet une rotation autour de l'axe horizontal. La rotation autour de l'axe de profondeur n'ayant que peut d'intérêt, elle n'a pas était implémentée. 
+
+Le fonctionnement est relativement simple, il y a un eventlistenner qui écoute les commandes claviers, un autre pour celle de la souris et un dernier pour les mouvements de la souris. Si un de ces trois éléments reçoit un stimulus, il met à jour la position et ou l'orientation de la caméra, et le rendu de cette dernière sera effectué au prochain rafraichissement de l'affichage. 
+
+\newpage
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{Bilan}
-
+\section{Difficultés rencontrées}
+\par
+Durant ce projet, nous avons été confronté à plusieurs difficultés :
+\begin{itemize}
+\item La prise en main des Inverse Kinematics pour avoir un rendu acceptable des animations dans Blender a été laborieuse.
+\item Il nous a fallut un temps d'adaptation pour prendre en main et comprendre comment utiliser la librairie Assimp.
+\item Comprendre comment parcourir de grandes quantités de données à travers des structures complexes pleines de références croisées a également été un frein à l'avancé du projet.
+\item De manière générale, la gestion de la mémoire en C++.
+\end{itemize}
 \section{Améliorations possibles}
 \par
 Nous aurions pu améliorer notre projet de la façon suivante :
-%brouillon
 \begin{itemize}
-\item Ajout de textures
-\item Système de gestion de lumière avec shader
-\item Améliorer les animations, qui restent rudes
+\item Nous pourrions ajouter des textures sur le modèle.
+\item Nous pourrions implémenter un système des gestion de la lumière avec des shaders.
+\item Nous pourrions améliorer les animations, qui restent rudes malgré tout.
+\item Nous pourrions optimiser les interpolations et applications des matrices de transformation via des shaders.
+\item Nous pourrions augmenter la fluidité de la caméra libre et simplifier son maniement par l'utilisateur.
 \end{itemize}
 
 \section{Conclusion}
 \par
-Compréhension de la modélisation et l'animation d'un personnage
-Représentation du rendu d'une scène
-Techniques d'animations, matrice projective
+Pour conclure, ce projet a été l'occasion de découvrir la programmation graphique avec OpenGL et l'utilisation de librairies gravitant autour de la 3D. Travailler sur un dragon et le voir s'animer au fil du temps a rendu le projet particulièrement ludique.
+Nous avons pu appréhender le processus de modélisation et d'animation d'un personnage pour arriver à la représentation du rendu dans une scène. Nous avons pu constater comment appliquer les concepts vus en cours. Explorer les différentes possibilités offertes par des librairies libres nous a aussi forcer à aller chercher ce qu'il est possible de faire et comment le réaliser avec ces outils mis à notre disposition.
+
 
 \newpage
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
