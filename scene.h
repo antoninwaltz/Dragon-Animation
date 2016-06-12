@@ -22,6 +22,7 @@ class SceneHandler
         virtual ~SceneHandler();
         bool load_file (char * fName);
         void initMeshList(const aiNode *nd);
+        void initAnimList(const aiNode *nd);
         void render();
         void get_bounding_box_for_node (const aiNode* nd, aiMatrix4x4* trafo);
         void get_bounding_box ();
@@ -34,7 +35,8 @@ class SceneHandler
     private:
         const struct aiScene* scene;
         Mesh **meshList;
-        int meshNumber;
+        Animation* animList;
+        int meshNumber, animNumber;
         aiVector3D scene_min, scene_max, scene_center;
         float scale, angle;
         int numFrame;

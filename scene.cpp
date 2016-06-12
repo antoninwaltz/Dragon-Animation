@@ -86,6 +86,10 @@ void SceneHandler::initMeshList(const aiNode* nd){
 
 }
 
+void SceneHandler::initAnimList(const aiNode* nd){
+    
+}
+
 void SceneHandler::resetNumFrame(){
     numFrame=0;
 }
