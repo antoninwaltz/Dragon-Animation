@@ -80,6 +80,12 @@ Chaque partie est composée de plusieurs os reliés entre eux. Chaque os dispose
 
 \newpage
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\chapter{Choix technologiques}
+\par
+OpenGl étant une librairie que nous ne connaissions pas, nous avions envie de faire les choses par nous même afin d'avoir une bonne compréhension de la programmation graphique.
+
+Initialement, il nous fallait rapidement une interface afin de visualiser le résultat des données que nous parsions. La librairie 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{Architecture du projet}
 \section{La librairie Asset Import}
 \par
@@ -90,8 +96,7 @@ Cela a permis de s'affranchir des opérations bas-niveau de parsage de fichier, 
 syntaxique du fichier 3D, tout en permettant de faire des tests avec un très grand nombre possible de 
 fichiers comme le Collada, le FBX, le format 3DS, ou encore simplement un fichier OBJ.
 \par
-Ces fichiers supportant différentes fonctionnalités, il n'est toutefois pas toujours possible de visualiser
-les animations.
+Ces fichiers supportant différentes fonctionnalités, il n'est toutefois pas toujours possible de visualiser les animations.
 
 \section{Nos structures de données}
 \par
@@ -120,21 +125,34 @@ On trouve généralement dans un fichier une scène contenant plusieurs objets.
 \item $BoneAnim$ : Une $BoneAnim$ contient 3 listes qui correspondent aux clés pour la translation, la rotation et la mise à l'échelle.
 \end{itemize}
 
+\subsection{Implémentation de la caméra libre}
+
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{Bilan}
-
+\section{Difficultés rencontrées}
+\par
+Durant ce projet, nous avons été confronté à plusieurs difficultés :
+\begin{itemize}
+\item La prise en main des Inverse Kinematics pour avoir un rendu acceptable des animations dans Blender a été laborieuse.
+\item Il nous a fallut un temps d'adaptation pour prendre en main et comprendre comment utiliser la librairie Assimp.
+\item Comprendre comment parcourir de grandes quantités de données à travers des structures complexes pleines de références croisées a également été un frein à l'avancé du projet.
+\item De manière générale, la gestion de la mémoire en C++.
+\end{itemize}
 \section{Améliorations possibles}
 \par
 Nous aurions pu améliorer notre projet de la façon suivante :
-%brouillon
 \begin{itemize}
-\item Ajout de textures
-\item Système de gestion de lumière avec shader
-\item Améliorer les animations, qui restent rudes
+\item Nous pourrions ajouter des textures sur le modèle.
+\item Nous pourrions implémenter un système des gestion de la lumière avec des shaders.
+\item Nous pourrions améliorer les animations, qui restent rudes malgré tout.
+\item Nous pourrions optimiser les interpolations et applications des matrices de transformation via des shaders.
+\item Nous pourrions augmenter la fluidité de la caméra libre et simplifier son maniement par l'utilisateur.
 \end{itemize}
 
 \section{Conclusion}
 \par
+Pour conclure, ce projet a été l'occasion 
 Compréhension de la modélisation et l'animation d'un personnage
 Représentation du rendu d'une scène
 Techniques d'animations, matrice projective
