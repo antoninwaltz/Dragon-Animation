@@ -77,7 +77,7 @@ class Mesh
             animList = (Animation**) malloc(scene->mNumAnimations * sizeof(Animation*));
             for (int i = 0; i < scene->mNumAnimations; i++) {
                 const aiAnimation *anim = scene->mAnimations[i];
-                Animation *my_anim = new Animation(boneNb);
+                Animation *my_anim = new Animation(boneNb, scene->mAnimations[i]->mDuration, scene->mAnimations[i]->mTicksPerSecond);
                 for (int j = 0; j < boneNb; j++) {
                      const aiNodeAnim *nodeAnim = findNodeAnim(anim, getBone(j)->getName());
                      BoneAnim *boneAnim = new BoneAnim(

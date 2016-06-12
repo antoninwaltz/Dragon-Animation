@@ -17,10 +17,14 @@ class Animation
         BoneAnim **listBoneAnim;
         int nbBoneAnim;
         int currentindex;
+        float animationTime;
+        float ticksPerSecond;
 
     public:
-        Animation(int nbBone){
+        Animation(int nbBone, float t, float tps){
             nbBoneAnim = nbBone;
+            animationTime = t;
+            ticksPerSecond = tps;
             listBoneAnim = (BoneAnim**)malloc(nbBone*sizeof(BoneAnim*));
             currentindex=0;
         };
@@ -31,6 +35,9 @@ class Animation
                 currentindex++;
             }
         }
+
+        float getDuration() { return animationTime; };
+        float getTicksPerSecond() { return ticksPerSecond; };
 
         BoneAnim** getBonesAnims(){
             return listBoneAnim;
