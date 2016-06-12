@@ -82,23 +82,23 @@ class Mesh
                 const aiAnimation *anim = scene->mAnimations[i];
                 Animation *my_anim = new Animation(boneNb, scene->mAnimations[i]->mDuration, scene->mAnimations[i]->mTicksPerSecond);
                 for (int j = 0; j < boneNb; j++) {
-                     const aiNodeAnim *nodeAnim = findNodeAnim(anim, getBone(j)->getName());
-                     BoneAnim *boneAnim = new BoneAnim(
-                                 nodeAnim->mNumPositionKeys,
-                                 nodeAnim->mNumRotationKeys,
-                                 nodeAnim->mNumScalingKeys,
-                                 getBone(j)->getName());
-                     for (int k = 0; k < nodeAnim->mNumPositionKeys; k++)
+                    const aiNodeAnim *nodeAnim = findNodeAnim(anim, getBone(j)->getName());
+                    BoneAnim *boneAnim = new BoneAnim(
+                            nodeAnim->mNumPositionKeys,
+                            nodeAnim->mNumRotationKeys,
+                            nodeAnim->mNumScalingKeys,
+                            getBone(j)->getName());
+                    for (int k = 0; k < nodeAnim->mNumPositionKeys; k++)
                         boneAnim->addTrans(nodeAnim->mPositionKeys[k]);
-                     for (int k = 0; k < nodeAnim->mNumRotationKeys; k++)
+                    for (int k = 0; k < nodeAnim->mNumRotationKeys; k++)
                         boneAnim->addRot(nodeAnim->mRotationKeys[k]);
-                     for (int k = 0; k < nodeAnim->mNumScalingKeys; k++)
+                    for (int k = 0; k < nodeAnim->mNumScalingKeys; k++)
                         boneAnim->addScal(nodeAnim->mScalingKeys[k]);
-                     my_anim->addBoneAnim(boneAnim);
+                    my_anim->addBoneAnim(boneAnim);
                 }
                 animList[animNb++] = my_anim;
             }
-         };
+        };
 
         void render(bool anim) {
             int i, j;
@@ -120,8 +120,8 @@ class Mesh
                     //pushMatrix
                     int index = f->getIndex(j);
                     if(anim){
-                       this->movePoint(this->getVertex(index)); 
-                    }                    
+                        this->movePoint(this->getVertex(index));
+                    }
                     if (this->getNormal(index) != NULL) {
                         glNormal3fv(&this->getNormal(index)->x);
                     }
@@ -134,37 +134,37 @@ class Mesh
         }
 
         void movePoint(Vertice* vert){
-            aiString* bones[4]=vert->getBonesID();
-            float* bWeight[4]=vert->getBonesWeight();
-            aiVector3D* trans=new aiVector3D();
-            aiVector3D* scal=new aiVector3D();
-            aiQuaternion* rot=new aiQuaternion();
-            for(int i=0;i<4;i++){
-                int j=0;
-                while (boneStateList[j]->getName()!=bones[i] && j<boneNb) {
+            aiString *bones = vert->getBonesID();
+            float *bWeight = vert->getBonesWeight();
+            aiVector3D* trans = new aiVector3D();
+            aiVector3D* scal = new aiVector3D();
+            aiQuaternion* rot = new aiQuaternion();
+            for(int i = 0; i < 4; i++){
+                int j = 0;
+                while (boneStateList[j]->getName() != bones[i] && j < boneNb) {
                     j++;
                 }
-                if(j<boneNb){
-                    trans+=(bWeight[i]*boneStateList[j]->getCurrTrans());
-                    scal+=(bWeight[i]*boneStateList[j]->getCurrScal());
-                    rot=rot*(bWeight[i]*boneStateList[j]->getCurrRot());
+                if (j < boneNb){
+                    trans += (bWeight[i] * boneStateList[j]->getCurrTrans());
+                    scal += (bWeight[i] * boneStateList[j]->getCurrScal());
+                    rot = rot * (bWeight[i] * boneStateList[j]->getCurrRot());
                 }
             }
-            applyScal(vert,scal);
-            applyRot(vert,rot);
-            applyTrans(vert,trans);
+            applyScal(vert, scal);
+            applyRot(vert, rot);
+            applyTrans(vert, trans);
         }
 
-        void applyTrans(Vertice* vert,aiVector3D* trans){
+        void applyTrans(Vertice* vert, const aiVector3D* trans){
             aiMatrix4x4 T;
-            T.Translation(trans,T);
-             vert->setPosition(vert->getPosition()*=T);
+            T.Translation(*trans, T);
+            vert->setPosition(vert->getPosition() * T);
         }
 
-        void applyScal(Vertice* vert, aiVector3D* scal){
+        void applyScal(Vertice* vert, const aiVector3D* scal){
             aiMatrix4x4 S;
-            S.Scaling(scal,S);
-            vert->setPosition(vert->getPosition()*=S);
+            S.Scaling(*scal,S);
+            vert->setPosition(vert->getPosition() * S);
         }
 
         void applyRot(Vertice* vert, aiQuaternion* rot){

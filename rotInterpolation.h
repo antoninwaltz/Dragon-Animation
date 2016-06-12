@@ -12,19 +12,17 @@
 #include <vectors.h>
 #include <vertice.h>
 #include <bone.h>
-#include <vectorKey.h>
-#include <rotKey.h>
 
 class RotInterpolation{
     private:
-        RotKey prevKeyframe;
+        aiQuatKey prevKeyframe;
         int indexPrevKeyframe;
-        RotKey nextKeyframe;
+        aiQuatKey nextKeyframe;
         int indexNextKeyframe;
         int dist;
 
     public:
-        RotInterpolation(RotKey prev, RotKey next, int prevI, int nextI){
+        RotInterpolation(aiQuatKey prev, aiQuatKey next, int prevI, int nextI){
             prevKeyframe = prev;
             nextKeyframe = next;
             indexPrevKeyframe = prevI;
@@ -36,7 +34,7 @@ class RotInterpolation{
 
         };
 
-        void Update(RotKey newK, int index){
+        void Update(aiQuatKey newK, int index){
             prevKeyframe = nextKeyframe;
             indexPrevKeyframe = indexNextKeyframe;
             nextKeyframe = newK;
@@ -52,7 +50,7 @@ class RotInterpolation{
 
         aiQuaternion interpolateRot(int index){
             aiQuaternion rot;
-            rot.Interpolate(rot,prevKeyframe.getKey().mValue,nextKeyframe.getKey().mValue, getFactor(index) );
+            rot.Interpolate(rot, prevKeyframe.mValue, nextKeyframe.mValue, getFactor(index) );
             return rot;
         }
 

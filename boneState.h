@@ -14,7 +14,7 @@
 class BoneState{
 	private:
 
-		aiString* boneName;
+		aiString boneName;
 
 		aiVector3D* currTrans;
 		aiVector3D* currScale;
@@ -26,13 +26,13 @@ class BoneState{
 	public:
 		BoneState(){
 
-		}
+		};
 
 		aiVector3D* getCurrTrans(){return currTrans;};
 		aiVector3D* getCurrScal(){return currScale;};
 		aiQuaternion* getCurrRot(){return currRot;};
 
-		aiString* getName(){return boneName;};
+		aiString &getName(){ return boneName; };
 
 };
 
