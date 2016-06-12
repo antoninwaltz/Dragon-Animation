@@ -38,8 +38,8 @@ public:
 		nbScal=ns;
 		nbRot=nr;
 		transList = (VectorKey*)malloc(nbTrans*sizeof(VectorKey));
-		scalList = (VectorKey*)malloc(nbscal*sizeof(VectorKey));
-		rotList = (RotKey*)malloc(nbrot*sizeof(RotKey));
+		scalList = (VectorKey*)malloc(nbScal*sizeof(VectorKey));
+		rotList = (RotKey*)malloc(nbRot*sizeof(RotKey));
 		ciT=0;
 		ciS=0;
 		ciR=0;
