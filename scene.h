@@ -13,13 +13,13 @@ class SceneHandler;
 #include <interpolation.h>
 #include <keyframe.h>
 #include <boneAnim.h>
+#include <utils.h>
 
 #define min(x,y) (x<y?x:y)
 #define max(x,y) (y>x?y:x)
 
 const aiNode *getNode(const aiScene *scene, aiString name);
 const aiNode *getChildNode(aiString name, const aiNode *node);
-const aiNodeAnim *findNodeAnim(const aiAnimation *anim, aiString name);
 
 class SceneHandler
 {

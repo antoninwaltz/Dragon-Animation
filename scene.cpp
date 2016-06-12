@@ -34,14 +34,6 @@ const aiNode *getChildNode(aiString name, const aiNode *node) {
     }
 }
 
-const aiNodeAnim *findNodeAnim(const aiAnimation *anim, aiString name) {
-    for (int i = 0; i < anim->mNumChannels; i++) {
-        if (anim->mChannels[i]->mNodeName == name) {
-            return anim->mChannels[i];
-        }
-    }
-    return NULL;
-}
 
 SceneHandler::~SceneHandler() {
     aiReleaseImport(scene);
