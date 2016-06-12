@@ -54,7 +54,7 @@ class RotInterpolation{
             return rot;
         }
 
-
+        int getLastIndex(){return indexNextKeyframe;};
 
 };
 #endif
