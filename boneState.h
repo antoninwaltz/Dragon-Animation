@@ -14,7 +14,7 @@
 class BoneState{
 	private:
 
-		aiString* boneName;
+		aiString boneName;
 
 		aiVector3D* currTrans;
 		aiVector3D* currScale;
@@ -40,17 +40,19 @@ class BoneState{
 			currScale=scalInter->InterpolateVect(1);
 		}
 
+
 		void initRot(RotKey* prev, RotKey* next, float tps){
 			int newIndex = (int)next->getKey()-mTime*tps;
 			rotInter=new RotInterpolation(prev,next,1,newIndex);
 			currRot=scalInter->InterpolateRot(1);			
 		}
 
+
 		aiVector3D* getCurrTrans(){return currTrans;};
 		aiVector3D* getCurrScal(){return currScale;};
 		aiQuaternion* getCurrRot(){return currRot;};
 
-		aiString* getName(){return boneName;};
+		aiString &getName(){ return boneName; };
 
 };
 

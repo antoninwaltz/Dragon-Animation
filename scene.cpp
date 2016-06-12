@@ -155,9 +155,9 @@ void SceneHandler::render() {
     // draw all meshes
     for (i = 0; i < meshNumber; ++i) {
         Mesh *my_mesh = meshList[i];
-        my_mesh->render();
+        my_mesh->render(isAnimating);
     }
-    glPopMatrix(isAnimating);
+    glPopMatrix();
 }
 
 void SceneHandler::get_bounding_box_for_node (const aiNode* nd,

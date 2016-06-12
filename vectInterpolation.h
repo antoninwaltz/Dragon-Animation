@@ -12,19 +12,18 @@
 #include <vectors.h>
 #include <vertice.h>
 #include <bone.h>
-#include <vectorKey.h>
-#include <rotKey.h>
 
 class VectInterpolation{
     private:
-        VectorKey prevKeyframe;
+        aiVectorKey prevKeyframe;
         int indexPrevKeyframe;
-        VectorKey nextKeyframe;
+        aiVectorKey nextKeyframe;
         int indexNextKeyframe;
         int dist;
 
     public:
-        VectInterpolation(VectorKey prev, VectorKey next, int prevI, int nextI){
+        VectInterpolation() {};
+        VectInterpolation(aiVectorKey prev, aiVectorKey next, int prevI, int nextI){
             prevKeyframe = prev;
             nextKeyframe = next;
             indexPrevKeyframe = prevI;
@@ -32,7 +31,7 @@ class VectInterpolation{
             dist = indexNextKeyframe - indexPrevKeyframe;
         };
 
-        void Update(VectorKey newK, int index){
+        void Update(aiVectorKey newK, int index){
             prevKeyframe = nextKeyframe;
             indexPrevKeyframe = indexNextKeyframe;
             nextKeyframe = newK;
@@ -49,7 +48,7 @@ class VectInterpolation{
         aiVector3D *InterpolateVect(int index){
             aiVector3D* pos;
             float t = getFactor(index);
-            pos= (1-t)*prevKeyframe.getKey().mValue + t*nextKeyframe.getKey().mValue;
+            pos= (1-t)*prevKeyframe.mValue + t*nextKeyframe.mValue;
             return pos;
         }
 
