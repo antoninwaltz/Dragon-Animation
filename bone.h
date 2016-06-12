@@ -13,13 +13,16 @@
 
 class Bone{
 	private:
-		aiString Name;
+		aiString name;
+		aiString parentName;
 		int* verticeIDList;
 		int nbVertice;
 
 	public:
-		Bone(aiString id);
+		Bone(aiString id, aiString p);
 
+        aiString getName() { return name; };
+        aiString getParentName() { return parentName; };
 		void addVertice(int vert_id);
 
 		int* getListofVertices();

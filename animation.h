@@ -5,40 +5,40 @@
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
 
-#include <vertice.h>
-#include <bone.h>
-#include <mesh.h>
-#include <interpolation.h>
-#include <keyframe.h>
+//#include <vertice.h>
+//#include <bone.h>
+//#include <interpolation.h>
+//#include <keyframe.h>
 #include <boneAnim.h>
 
-class Animation{
-private:
-	BoneAnim* listBoneAnim;
-	int nbBoneAnim;
-	int currentindex;
+class Animation
+{
+    private:
+        BoneAnim **listBoneAnim;
+        int nbBoneAnim;
+        int currentindex;
 
-public:
-	Animation(int nbBone){
-		nbBoneAnim = nbBone;
-		listBoneAnim = (BoneAnim*)malloc(nbBone*sizeof(BoneAnim));
-		currentindex=0;
-	};
+    public:
+        Animation(int nbBone){
+            nbBoneAnim = nbBone;
+            listBoneAnim = (BoneAnim**)malloc(nbBone*sizeof(BoneAnim*));
+            currentindex=0;
+        };
 
-	void addBoneAnim(BoneAnim bone){
-		if(currentindex<nbBoneAnim){
-			listBoneAnim[currentindex]=bone;
-			currentindex++;
-		}
-	}
+        void addBoneAnim(BoneAnim *bone){
+            if(currentindex < nbBoneAnim){
+                listBoneAnim[currentindex]=bone;
+                currentindex++;
+            }
+        }
 
-	BoneAnim* getBonesAnims(){
-		return listBoneAnim;
-	}
+        BoneAnim** getBonesAnims(){
+            return listBoneAnim;
+        }
 
-	int getNbBonesAnim(){
-		return nbBoneAnim;
-	}
+        int getNbBonesAnim(){
+            return nbBoneAnim;
+        }
 
 };
 

@@ -12,12 +12,16 @@
 #include <vectors.h>
 #include <vertice.h>
 #include <bone.h>
+#include <animation.h>
+#include <scene.h>
 
-class Face {
+class Face
+{
     private:
         GLenum type;
         int indexNumber, maxIndexNumber;
         int *indices;
+
     public:
         Face(int nb) {
             indexNumber = 0;
@@ -42,28 +46,85 @@ class Face {
         };
 };
 
-class Mesh{
+const aiNodeAnim *findNodeAnim(const aiAnimation *anim, aiString name);
+
+class Mesh
+{
     private:
         Vertice **verticeList;
         aiVector3D **normalList;
-        Bone **boneList;
         Face **faceList;
-        int vertNb, boneNb, faceNb, maxFaceNb;
+        Bone **boneList;
+        Animation **animList;
+        int vertNb, boneNb, faceNb, animNb, maxFaceNb;
         int mesh_id;
 
     public:
-        Mesh(int mesh_id, int vertSize, int boneSize, int faceSize){
+        Mesh(int id, int vertSize, int boneSize, int faceSize){
             vertNb = vertSize;
             boneNb = boneSize;
             faceNb = 0;
+            animNb = 0;
             maxFaceNb = faceSize;
-            mesh_id = mesh_id;
+            mesh_id = id;
             verticeList = (Vertice**)malloc(vertNb * sizeof(Vertice*));
             normalList = (aiVector3D**)malloc(vertNb * sizeof(aiVector3D*));
             boneList = (Bone**)malloc(boneNb * sizeof(Bone*));
             faceList = (Face**)malloc(faceSize * sizeof(Face*));
         };
 
+        void initAnimList(const aiScene *scene) {
+            animList = (Animation**) malloc(scene->mNumAnimations * sizeof(Animation*));
+            for (int i = 0; i < scene->mNumAnimations; i++) {
+                const aiAnimation *anim = scene->mAnimations[i];
+                Animation *my_anim = new Animation(boneNb);
+                for (int j = 0; j < boneNb; j++) {
+                     const aiNodeAnim *nodeAnim = findNodeAnim(anim, getBone(j)->getName());
+                     BoneAnim *boneAnim = new BoneAnim(
+                                 nodeAnim->mNumPositionKeys,
+                                 nodeAnim->mNumRotationKeys,
+                                 nodeAnim->mNumScalingKeys);
+                     for (int k = 0; k < nodeAnim->mNumPositionKeys; k++)
+                        boneAnim->addTrans(nodeAnim->mPositionKeys[k]);
+                     for (int k = 0; k < nodeAnim->mNumRotationKeys; k++)
+                        boneAnim->addRot(nodeAnim->mRotationKeys[k]);
+                     for (int k = 0; k < nodeAnim->mNumScalingKeys; k++)
+                        boneAnim->addScal(nodeAnim->mScalingKeys[k]);
+                     my_anim->addBoneAnim(boneAnim);
+                }
+                animList[animNb++] = my_anim;
+            }
+         };
+
+        void render() {
+            int i, j;
+            bool use_normal = false;
+            if (this->getNormal(0) != NULL) {
+                use_normal = true;
+            }
+
+            if(use_normal) {
+                glEnable(GL_LIGHTING);
+            } else {
+                glDisable(GL_LIGHTING);
+            }
+
+            for (i = 0; i < this->getFaceNumber(); i++) {
+                Face *f = this->getFace(i);
+                glBegin(f->getType());
+                for (j = 0; j < f->getIndexNumber(); j++) {
+                    //pushMatrix
+                    int index = f->getIndex(j);
+                    if (this->getNormal(index) != NULL) {
+                        glNormal3fv(&this->getNormal(index)->x);
+                    }
+                    glVertex3fv(&(this->getVertex(index)->getPosition()).x);
+                    //popMatrix
+                }
+                glEnd();
+            }
+
+        }
         void addVertice(Vertice *vert, aiVector3D *normal, int index) {
             if (index < vertNb) {
                 verticeList[index] = vert;
@@ -98,6 +159,14 @@ class Mesh{
         Vertice *getVertex(int i) { return (i < vertNb) ? verticeList[i] : NULL; };
         aiVector3D *getNormal(int i) { return (i < vertNb) ? normalList[i] : NULL; };
         Bone *getBone(int i) { return (i < boneNb) ? boneList[i] : NULL; };
+        int getBoneIndex(aiString name) {
+            for (int i = 0; i < boneNb; ++i) {
+                if (boneList[i]->getName() == name) {
+                    return i;
+                }
+            }
+            return -1;
+        }
 };
 
 #endif

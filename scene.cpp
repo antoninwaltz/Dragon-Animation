@@ -14,6 +14,35 @@
 #include <scene.h>
 using namespace std;
 
+const aiNode *getNode(const aiScene *scene, aiString name) {
+    if (name == scene->mRootNode->mName)
+        return &(*scene->mRootNode);
+    else
+        return getChildNode(name, scene->mRootNode);
+}
+
+const aiNode *getChildNode(aiString name, const aiNode *node) {
+    if (name == node->mName)
+        return node;
+    else {
+        const aiNode *nd = NULL;
+        for (unsigned int i = 0; i < node->mNumChildren; i++) {
+            nd = getChildNode(name, node->mChildren[i]);
+            if (nd != NULL) return nd;
+        }
+        return NULL;
+    }
+}
+
+const aiNodeAnim *findNodeAnim(const aiAnimation *anim, aiString name) {
+    for (int i = 0; i < anim->mNumChannels; i++) {
+        if (anim->mChannels[i]->mNodeName == name) {
+            return anim->mChannels[i];
+        }
+    }
+    return NULL;
+}
+
 SceneHandler::~SceneHandler() {
     aiReleaseImport(scene);
 }
@@ -69,8 +98,12 @@ void SceneHandler::initMeshList(const aiNode* nd){
         }
         struct aiBone** bones = mesh->mBones;
         for (j = 0; j < mesh->mNumBones; ++j) {
-            Bone *tmpBone = new Bone(bones[j]->mName);
-            for(k = 0; k<bones[j]->mNumWeights; k++){
+            const aiNode *p = getNode(scene, bones[j]->mName);
+            Bone *tmpBone = NULL;
+            if (p != NULL) p = p->mParent;
+            if (p != NULL) tmpBone = new Bone(bones[j]->mName, p->mName);
+            else tmpBone = new Bone(bones[j]->mName, aiString(""));
+            for(k = 0; k < bones[j]->mNumWeights; k++){
                 int vertID= bones[j]->mWeights[k].mVertexId;
                 float weight =bones[j]->mWeights[k].mWeight;
                 tmpBone->addVertice(vertID);
@@ -78,6 +111,7 @@ void SceneHandler::initMeshList(const aiNode* nd){
             }
             newMesh->addBone(tmpBone, j);
         }
+        newMesh->initAnimList(scene);
         meshList[meshNumber++] = newMesh;
     }
     for (unsigned int n = 0; n < nd->mNumChildren; ++n) {
@@ -86,30 +120,26 @@ void SceneHandler::initMeshList(const aiNode* nd){
 
 }
 
-void SceneHandler::initAnimList(const aiNode* nd){
-    
-}
-
 void SceneHandler::resetNumFrame(){
     numFrame=0;
 }
 
 void SceneHandler::render() {
-    int i, j, k;
+    int i;
     const aiNode *nd = scene->mRootNode;
     aiMatrix4x4 m = nd->mTransformation;
 
     if(isAnimating){
         if(numFrame<scene->mAnimations[numAnimation-1]->mDuration){
             numFrame++;
-            cout<<"Frame "<<numFrame<<"\n"; 
+            cout<<"Frame "<<numFrame<<"\n";
         }else{
             isAnimating=false;
         }
-        
+
     }
-    
-    
+
+
     glScalef(scale, scale, scale);
 
     glTranslatef( -scene_center.x, -scene_center.y, -scene_center.z );
@@ -125,31 +155,7 @@ void SceneHandler::render() {
     // draw all meshes
     for (i = 0; i < meshNumber; ++i) {
         Mesh *my_mesh = meshList[i];
-        bool use_normal = false;
-        if (my_mesh->getNormal(0) != NULL) {
-            use_normal = true;
-        }
-
-        if(use_normal) {
-            glEnable(GL_LIGHTING);
-        } else {
-            glDisable(GL_LIGHTING);
-        }
-
-        for (j = 0; j < my_mesh->getFaceNumber(); j++) {
-            Face *f = my_mesh->getFace(j);
-            glBegin(f->getType());
-            for (k = 0; k < f->getIndexNumber(); k++) {
-                //pushMatrix
-                int index = f->getIndex(k);
-                if (my_mesh->getNormal(index) != NULL) {
-                    glNormal3fv(&my_mesh->getNormal(index)->x);
-                }
-                glVertex3fv(&(my_mesh->getVertex(index)->getPosition()).x);
-                //popMatrix
-            }
-            glEnd();
-        }
+        my_mesh->render();
     }
     glPopMatrix();
 }
