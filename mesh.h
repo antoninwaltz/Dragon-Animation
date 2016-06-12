@@ -171,6 +171,19 @@ class Mesh
             vert->setPosition(rot->Rotate(vert->getPosition()));
         }
 
+        void initBoneStateList(int numFrame){
+            for(int i=0;i<boneNb;i++){
+                float tps =animList[animNb]->getTicksPerSecond();
+                BoneAnim* bAnim = animList[animNb]->getBoneAnim(boneList[i]->getName());
+                BoneState* tmpBoneState = new BoneState(boneList[i]->getName());
+                tmpBoneState->initTrans(bAnim->getTrans()[0],bAnim->getTrans()[1],tps);
+                tmpBoneState->initRot(bAnim->getRot()[0],bAnim->getRot()[1],tps);
+                tmpBoneState->initScal(bAnim->getScal()[0],bAnim->getScal()[1],tps);
+                boneStateList[i]=tmpBoneState;
+            }
+
+        }
+
         void addVertice(Vertice *vert, aiVector3D *normal, int index) {
             if (index < vertNb) {
                 verticeList[index] = vert;

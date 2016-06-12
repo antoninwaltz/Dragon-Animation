@@ -46,8 +46,8 @@ class VectInterpolation{
             return fact;
         };
 
-        aiVector3D InterpolateVect(int index){
-            aiVector3D pos;
+        aiVector3D *InterpolateVect(int index){
+            aiVector3D* pos;
             float t = getFactor(index);
             pos= (1-t)*prevKeyframe.getKey().mValue + t*nextKeyframe.getKey().mValue;
             return pos;

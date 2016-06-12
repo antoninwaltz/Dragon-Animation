@@ -36,6 +36,19 @@ class Animation
             }
         }
 
+        BoneAnim* getBoneAnim(aiString boneName){
+        	int i=0;
+        	while(listBoneAnim[i]->getName()!=boneName && i<nbBoneAnim){
+        		i++
+        	}
+
+        	if(i<nbBoneAnim){
+        		return listBoneAnim[i];
+        	}else{
+        		return NULL;
+        	}
+        }
+
         float getDuration() { return animationTime; };
         float getTicksPerSecond() { return ticksPerSecond; };
 

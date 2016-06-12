@@ -65,6 +65,7 @@ class BoneAnim
                 ciR++;
             }
         }
+        aiString getName(){return boneName;};
 
         int getNbTrans(){return nbTrans;};
         int getNbScal(){return nbScal;};
