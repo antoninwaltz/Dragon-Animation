@@ -160,12 +160,18 @@ La fonction qui procède au rendu est la fonction $render$. Dans le $SceneHandle
 Toutes nos listes sont initialisées grâce à la méthode $initMeshList$ de $SceneHandler$ et ce avant le premier rendu ce qui nous permet d'effectuer certains calculs en amont. D'où l'intérêt de se servir de nos propres structures.
 
     \section{Animation Structure}
+\begin{figure}[H]
+    \begin{center}
+        \includegraphics[width=1\textwidth]{AnimStructure.jpg}
+        \caption{Diagramme de classe pour la structure d'une animation}
+    \end{center}
+\end{figure}
 
-La classe $Animation$ est celle qui nous permet de stocker toutes les animation du mesh. Elle contient une liste de $BoneAnim$, c'est à dire toutes les keyframes associés à un bone. Ces keyframes sont stockées sous trois variables : translation, mise à l'échelle et rotation. Tout est initialisé dans la méthode $initAnimList$.
+La classe $Animation$ est celle qui nous permet de stocker toutes les animations du mesh. Elle contient une liste de $BoneAnim$, c'est à dire toutes les $KeyFrames$ associées à un $bone$. Ces $KeyFrames$ sont stockées sous trois variables : translation, mise à l'échelle et rotation. Tout est initialisé dans la méthode $initAnimList$.
 
-A chaque frame, on actualise la liste de $BoneState$, des matrices $4x4$ représentant la transformation associée à chaque bone à la frame donnée. Cette opération est effectuée dans la méthode $updateBoneStateList$. Elle seront ensuite utilisée dans la méthode $render$ pour faire bouger les vertices.
+A chaque frame, on actualise la liste de $BoneState$, des matrices $4x4$ représentant la transformation associée à chaque bone à la frame donnée. Cette opération est effectuée dans la méthode $updateBoneStateList$. Elles seront ensuite utilisées dans la méthode $render$ pour faire bouger les vertices.
 
-Il existe aussi trois fonction d'interpolation qui gère l'interpolation pour les translation, les mises à l'échelle et les rotations. Elles sont utilles pour calculer le $BoneState$, puisque qu'on interpole chaque transformation avant de créer la matrice commune.
+Il existe aussi trois fonctions d'interpolation qui gèrent l'interpolation pour les translations, les mises à l'échelle et les rotations. Elles sont utiles pour calculer le $BoneState$, puisque qu'on interpole chaque transformation avant de créer la matrice commune.
 
 
 
@@ -205,9 +211,6 @@ Pour conclure, ce projet a été l'occasion de découvrir la programmation graph
 Nous avons pu appréhender le processus de modélisation et d'animation d'un personnage pour arriver à la représentation du rendu dans une scène. Nous avons pu constater comment appliquer les concepts vus en cours. Explorer les différentes possibilités offertes par des librairies libres nous a aussi forcer à aller chercher ce qu'il est possible de faire et comment le réaliser avec ces outils mis à notre disposition.
 
 
-\newpage
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\chapter{Annexes}
 
 \end{document}
 
