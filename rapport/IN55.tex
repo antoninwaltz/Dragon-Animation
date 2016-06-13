@@ -54,20 +54,20 @@ Durant ce semestre en IN55, nous avons choisi le projet \textit{Animation d'un p
 
 Tout d'abord, étant tous plus ou moins proche des communautés fan d'heroic-fantasy, le dragon est pour nous une figure emblématique de notre imaginaire. Ce projet nous laisser donc l'opportunité de donner vie à cette créature mythique. 
 
-Dans un second temps, c'est l'architecture du squelette qui nous a donné envie. Basiquement, un dragon c'est : une tête, un cou, un buste, des ailes, des pattes, et une queue. Cette structure nous a paru suffisament complexe pour que l'on puisse faire des animations intéressantes, mais reste relativement simple n'ayant pas forcément trop d'éléments du squelette qui se suivent. Ainsi, nous avons voulut faire voler, marcher ou asseoir notre dragon.
+Dans un second temps, c'est l'architecture du squelette qui nous a donné envie. Basiquement, un dragon c'est : une tête, un cou, un buste, des ailes, des pattes et une queue. Cette structure nous a paru suffisament complexe pour que l'on puisse faire des animations intéressantes, mais reste relativement simple n'ayant pas forcément trop d'éléments du squelette qui se suivent. Ainsi, nous avons voulut faire voler, marcher ou s'asseoir notre dragon.
 
-Nous develloperons dans ce rapport la structure de notre objet 3D. Nous parlerons aussi des technologies employées pour faire le rendu 3D et d el'architecture de notre programme. Enfin, nous ouvrirons des pistes d'évolution pour ce projet. 
+Nous developperons dans ce rapport la structure de notre objet 3D. Nous parlerons aussi des technologies employées pour faire le rendu 3D et de l'architecture de notre programme. Enfin, nous ouvrirons des pistes d'évolution pour ce projet. 
 
 
 \newpage
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{Modélisation et armature}
 \par
-Nous avons effectué la modélisation du dragon sous Blender. Nous avons choisis ce logiciel pour plusieurs raisons. D'abord son accessibilité. Il est plus intuitif qu'une grande partie de ces concurrents (Maya ou 3DsMax) et permet donc d'avoir des résultats convaincants plus rapidemments. Ensuite il a le gros avantage d'être libre et gratuit, nous n'avons donc pas eu besoin de cracker un logiciel ou d'utiliser des licenses étudiantes contraignantes, et nous avons notamment le droit de montrer notre projet. Ceci est relativemment important pour nous, étant donné que nous sommes en dernière année, il est primordial de pouvoir partager nos réalisations dan sle cadre de recherche de stage ou d'emploi. Cependant, la suite d'Autodesk (Maya ou 3DsMax) étant majoritairement utilisée dans l'industrie et le divertissement, nous ne sommes pas formé sur ces logiciels en chisissant Blender.
+Nous avons effectué la modélisation du dragon sous Blender. Nous avons choisis ce logiciel pour plusieurs raisons. D'abord son accessibilité, il est plus intuitif qu'une grande partie de ses concurrents (Maya ou 3DsMax) et permet donc d'avoir des résultats convaincants plus rapidement. Ensuite il a l'avantage d'être libre et gratuit, nous n'avons donc pas eu besoin de pirater un logiciel ou d'utiliser des licenses étudiantes contraignantes, et nous avons notamment le droit de montrer notre projet. Ceci est relativemment important pour nous, étant donné que nous sommes en dernière année, il est primordial de pouvoir partager nos réalisations dans le cadre de recherche de stage ou d'emploi. Cependant, la suite d'Autodesk (Maya ou 3DsMax) étant majoritairement utilisée dans l'industrie et le divertissement, nous ne sommes pas formé sur ces logiciels en choisissant Blender.
 
 Son armature se découpe en plusieurs parties indépendantes les unes des autres. Il y a :
 \begin{itemize}
-\item La tête toute entière (1 os)
+\item La machoire haute (1 os)
 \item La machoire (1 os)
 \item Le cou (6 os)
 \item Le corps allant de la base du coup jusqu'à la queue (8 os)
@@ -92,12 +92,12 @@ Chaque partie est composée de plusieurs os reliés entre eux. Chaque os dispose
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{Architecture du projet}
 \section{Choix technologiques}
-De part le sujet du projet, nous devions effectuer le rendu 3D à l'aide d'un programme alliant C++ et OpenGL. Il était conseillé de le faire avec Qt, un framework C++ qui offre diverses bibliothèques et widgets pratique pour mettre en oeuvre des applications C++. Cependant, après de nombreux problèmes du au différentes plateforme de dévellopement que nous possédions, nous avons temporairement utiliser la bibliothèque Assimp pour commencer à travailler. Elle c'est avérée très efficace, et nous avons donc pris la décision de continuer avec elle et de s'affranchir de Qt. 
+De part le sujet du projet, nous devions effectuer le rendu 3D à l'aide d'un programme alliant C++ et OpenGL. Il était conseillé de le faire avec Qt, un framework C++ qui offre diverses bibliothèques et widgets pratique pour mettre en oeuvre des applications C++. Cependant, après de nombreux problèmes dus aux différentes plateformes de développement que nous possédions, nous avons temporairement utiliser la bibliothèque Assimp pour commencer à travailler. Elle s'est avérée très efficace, nous avons donc pris la décision de continuer avec elle et de s'affranchir de Qt. 
 \section{La librairie Asset Import} 
 \par
-Asset Import est une librairie libre sous licence BSD permettant d'importer dans une structure de données un très grand nombre de fichiers 3D. Elle offre plusieurs avantage, comme le fait d'avoir une API pour du C++ ou du C, ou encore de pouvoir exporter des modèles 3D. Elle est d'ailleurs la base d'une visionneuse 3D disponible sur windows : open3mod (qui est open source).
+Asset Import est une librairie libre sous licence BSD permettant d'importer dans une structure de données un très grand nombre de fichiers 3D. Elle offre plusieurs avantage, comme le fait d'avoir une API pour du C++ ou du C, ou encore de pouvoir exporter des modèles 3D. Elle est d'ailleurs la base d'une visionneuse 3D disponible sur windows : open3mod (qui est open source). Lors de la modélisation sous Blender, nous n'avions pas à nous préoccupé particulièrement de comment gérer les formes compliquées ou les normales de toutes les faces. Or, lors du parsage du fichier exporté, nous devons nous en préoccuper.
 \par
-Cela a permis de s'affranchir des opérations bas-niveau de parsage de fichier, ainsi que de la vérification 
+L'utilisation de Asset Import a permis de s'affranchir des opérations bas-niveau de parsage de fichier, ainsi que de la vérification 
 syntaxique du fichier 3D, tout en permettant de faire des tests avec un très grand nombre possible de 
 fichiers comme le Collada, le FBX, le format 3DS, l'OBJ ou même si on le souhaite des format plus exotiques comme le BVH (un format de motion capture) ou le .3d (un format utilisé par le moteur de jeu Unreal).
 \par
@@ -129,15 +129,15 @@ On trouve généralement dans un fichier une scène contenant plusieurs objets.
 \item $Face$ : Une $Face$ contient une liste d'indice qui forment une face.
 \item $Animation$ : Une $Animation$ contient une liste de $BoneAnim$. Il y a autant de liste que de $Bone$.
 \item $BoneAnim$ : Une $BoneAnim$ contient 3 listes qui correspondent aux clés pour la translation, la rotation et la mise à l'échelle.
-\item $BoneState$ : Une $BoneAnim$ contient 3 listes qui correspondent aux clés pour la translation, la rotation et la mise à l'échelle.
-\item $VectInterpolation et RotInterpolation$ : Ces deux classes s'occupe de l'interpolation des matrice de transformation entre deux KeyFrame (moment clé d'une animation)
+\item $BoneState$ : Une $BoneState$ contient l'état d'un $Bone$
+\item $VectInterpolation$ et $RotInterpolation$ : Ces deux classes s'occupent de l'interpolation des matrices de transformation entre deux $KeyFrame$ (moment clé d'une animation)
 \end{itemize}
 
 \subsection{Caméra libre}
 \par
-La caméra libre dispose de 5 degrès de libertés. Tout d'abord les 3 translations de l'espace sont possibles. Ainsi les flèches du haut et bas nous permette de se déplacer sur l'axe y (axe vertical) pendant que celle de droite et gauche nous translate selon x (axe horizontale) enfin la molette de la souris controle le mouvement suivant z (la profondeur). Ensuite 2 rotations sont disponibles. Un click qauche souris maintenu suivit d'un déplacement permet de tourner autour de l'axe vertical tant que la même manipulation avec un click droit permet une rotation autour de l'axe horizontal. La rotation autour de l'axe de profondeur n'ayant que peut d'intérêt, elle n'a pas était implémentée. 
+La caméra libre dispose de 5 degrès de liberté. Tout d'abord les 3 translations de l'espace sont possibles. Ainsi les flèches du haut et bas nous permette de se déplacer sur l'axe $y$ (axe vertical) pendant que celle de droite et gauche nous translate selon $x$ (axe horizontale) enfin la molette de la souris contrôle le mouvement suivant $z$ (la profondeur). Ensuite 2 rotations sont disponibles. Un clique gauche souris maintenu suivit d'un déplacement permet de tourner autour de l'axe vertical tandis que la même manipulation avec un clique droit permet une rotation autour de l'axe horizontal. La rotation autour de l'axe de profondeur n'ayant que peut d'intérêt, elle n'a pas été implémenté. 
 
-Le fonctionnement est relativement simple, il y a un eventlistenner qui écoute les commandes claviers, un autre pour celle de la souris et un dernier pour les mouvements de la souris. Si un de ces trois éléments reçoit un stimulus, il met à jour la position et ou l'orientation de la caméra, et le rendu de cette dernière sera effectué au prochain rafraichissement de l'affichage. 
+Le fonctionnement est relativement simple, il y a un $eventListenner$ qui écoute les commandes claviers, un autre pour celle de la souris et un dernier pour les mouvements de la souris. Si un de ces trois éléments reçoit un stimuli, il met à jour la position et ou l'orientation de la caméra, et le rendu de cette dernière sera effectué au prochain rafraîchissement de l'affichage. 
 
 \newpage
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
