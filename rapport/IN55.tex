@@ -135,13 +135,21 @@ On trouve généralement dans un fichier une scène contenant plusieurs objets.
 
 \subsection{Caméra libre}
 \par
-La caméra libre dispose de 5 degrès de liberté. Tout d'abord les 3 translations de l'espace sont possibles. Ainsi les flèches du haut et bas nous permette de se déplacer sur l'axe $y$ (axe vertical) pendant que celle de droite et gauche nous translate selon $x$ (axe horizontale) enfin la molette de la souris contrôle le mouvement suivant $z$ (la profondeur). Ensuite 2 rotations sont disponibles. Un clique gauche souris maintenu suivit d'un déplacement permet de tourner autour de l'axe vertical tandis que la même manipulation avec un clique droit permet une rotation autour de l'axe horizontal. La rotation autour de l'axe de profondeur n'ayant que peut d'intérêt, elle n'a pas été implémenté. 
+La caméra libre dispose de 5 degrès de liberté. Tout d'abord les 3 translations de l'espace sont possibles. Ainsi les flèches du haut et bas nous permette de se déplacer sur l'axe $y$ (axe vertical) pendant que celle de droite et gauche nous translate selon $x$ (axe horizontale) enfin la molette de la souris contrôle le mouvement suivant $z$ (la profondeur). Ensuite 2 rotations sont disponibles. Un clique gauche souris maintenue suivi d'un déplacement permet de tourner autour de l'axe vertical tandis que la même manipulation avec un clique droit permet une rotation autour de l'axe horizontal. La rotation autour de l'axe de profondeur n'ayant que peu d'intérêt, elle n'a pas été implémenté. 
 
 Le fonctionnement est relativement simple, il y a un $eventListenner$ qui écoute les commandes claviers, un autre pour celle de la souris et un dernier pour les mouvements de la souris. Si un de ces trois éléments reçoit un stimuli, il met à jour la position et ou l'orientation de la caméra, et le rendu de cette dernière sera effectué au prochain rafraîchissement de l'affichage. 
 
 \newpage
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{Bilan}
+\section{Guide d'utilisation}
+Voici les touches à utiliser pour manipuler le programme :
+\begin{description}
+	\item[1,2,3 :] Sélectionne et lance une animation.
+	\item[$\leftarrow,\uparrow,\downarrow,\rightarrow$ :] Translate la caméra sur les axes $X$ et $Y$
+	\item[Souris :] Maintenir un clic et déplacer la souris déplacera la caméra libre sur l'axe en question.
+	\item[Molette souris :] Avancer ou reculer la molette déplacera la caméra de façon à zoomer/dézoomer.
+\end{description}
 \section{Difficultés rencontrées}
 \par
 Durant ce projet, nous avons été confronté à plusieurs difficultés :
