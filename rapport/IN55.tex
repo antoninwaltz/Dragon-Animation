@@ -125,7 +125,6 @@ On trouve généralement dans un fichier une scène contenant plusieurs objets.
 \item $Face$ : Une $Face$ contient une liste d'indice qui forment une face.
 \item $Animation$ : Une $Animation$ contient une liste de $BoneAnim$. Il y a autant de liste que de $Bone$.
 \item $BoneAnim$ : Une $BoneAnim$ contient 3 listes qui correspondent aux clés pour la translation, la rotation et la mise à l'échelle.
-\item $BoneState$ : Une $BoneState$ contient l'état d'un $Bone$
 \item $VectInterpolation$ et $RotInterpolation$ : Ces deux classes s'occupent de l'interpolation des matrices de transformation entre deux $KeyFrame$ (moment clé d'une animation)
 \end{itemize}
 
@@ -152,13 +151,25 @@ La structure de Mesh est ce qui nous permet d'effectuer le rendu de notre objet.
 \par
 Il y a aussi une liste de face qui permet de savoir quelles vertices forment quel polygone. On stocke avec les normales à chaque face, ce qui est très utile pour les rendus d'illumination par exemple.
 
-    \section{Animation Structure}
+   
 
 \par
 La fonction qui procède au rendu est la fonction $render$. Dans le $SceneHandler$ on appelle cette fonction pour chaque $Mesh$ qui va parcourir la liste des faces afin d'en effectuer le rendu. C'est d'ailleurs ici, que l'on effectue les transformations apportées aux vertices lors de l'animation afin d'en faire le rendu.
 
 \par
 Toutes nos listes sont initialisées grâce à la méthode $initMeshList$ de $SceneHandler$ et ce avant le premier rendu ce qui nous permet d'effectuer certains calculs en amont. D'où l'intérêt de se servir de nos propres structures.
+
+    \section{Animation Structure}
+
+La classe $Animation$ est celle qui nous permet de stocker toutes les animation du mesh. Elle contient une liste de $BoneAnim$, c'est à dire toutes les keyframes associés à un bone. Ces keyframes sont stockées sous trois variables : translation, mise à l'échelle et rotation. Tout est initialisé dans la méthode $initAnimList$.
+
+A chaque frame, on actualise la liste de $BoneState$, des matrices $4x4$ représentant la transformation associée à chaque bone à la frame donnée. Cette opération est effectuée dans la méthode $updateBoneStateList$. Elle seront ensuite utilisée dans la méthode $render$ pour faire bouger les vertices.
+
+Il existe aussi trois fonction d'interpolation qui gère l'interpolation pour les translation, les mises à l'échelle et les rotations. Elles sont utilles pour calculer le $BoneState$, puisque qu'on interpole chaque transformation avant de créer la matrice commune.
+
+
+
+
 
 \newpage
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
