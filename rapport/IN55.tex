@@ -88,7 +88,7 @@ Chaque partie est composée de plusieurs os reliés entre eux. Chaque os dispose
 
 \chapter{Architecture du projet}
 \section{Choix technologiques}
-De part le sujet du projet, nous devions effectuer le rendu 3D à l'aide d'un programme alliant C++ et OpenGL. Il était conseillé de le faire avec Qt, un framework C++ qui offre diverses bibliothèques et widgets pratique pour mettre en oeuvre des applications C++. Cependant, après de nombreux problèmes dus aux différentes plateformes de développement que nous possédions, nous avons temporairement utiliser la bibliothèque Assimp pour commencer à travailler. Elle s'est avérée très efficace, nous avons donc pris la décision de continuer avec elle et de s'affranchir de Qt. 
+De part le sujet du projet, nous devions effectuer le rendu 3D à l'aide d'un programme alliant C++ et OpenGL. Il était conseillé de le faire avec Qt, un framework C++ qui offre diverses bibliothèques et widgets pratique pour mettre en oeuvre des applications C++. Cependant, après de nombreux problèmes dus aux différentes plateformes de développement que nous possédions, nous avons essayer avec la bibliothèque Open GL Utils (qui est très liée à Open GL). Cela nous a permis de faire ce que nous souhaitions et donc nous nous sommes passés de QT.
 \section{La librairie Asset Import} 
 \par
 Asset Import est une librairie libre sous licence BSD permettant d'importer dans une structure de données un très grand nombre de fichiers 3D. Elle offre plusieurs avantage, comme le fait d'avoir une API pour du C++ ou du C, ou encore de pouvoir exporter des modèles 3D. Elle est d'ailleurs la base d'une visionneuse 3D disponible sur windows : open3mod (qui est open source). Lors de la modélisation sous Blender, nous n'avions pas à nous préoccupé particulièrement de comment gérer les formes compliquées ou les normales de toutes les faces. Or, lors du parsage du fichier exporté, nous devons nous en préoccuper.
@@ -152,6 +152,8 @@ Le fonctionnement est relativement simple, il y a un $eventListenner$ qui écout
     La fonction qui procède au rendu est la fonction render. Dans le SceneHandler on appel cette fonction pour chaque Mesh qui va parcourir la liste des faces afin d'en effectuer le rendu. C'est d'ailleurs ici, que l'on effectue les transformations apportées aux vertices lors de l'animation afin d'en fair ele rendu.
 
     Toute nos listes sont initialisée grace à la méthode initMeshList de SceneHandler et ce avant le premier rendu ce qui nous permet d'effectuer certain calcul en amont. D'où l'intéret de se servir de nos propres structures.
+
+    \section{Animation Structure}
 
 \par
 
