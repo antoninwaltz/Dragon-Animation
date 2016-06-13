@@ -63,7 +63,7 @@ Nous developperons dans ce rapport la structure de notre objet 3D. Nous parleron
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{Modélisation et armature}
 \par
-Nous avons effectué la modélisation du dragon sous Blender. Nous avons choisis ce logiciel pour plusieurs raisons. D'abord son accessibilité, il est plus intuitif qu'une grande partie de ses concurrents (Maya ou 3DsMax) et permet donc d'avoir des résultats convaincants plus rapidement. Ensuite il a l'avantage d'être libre et gratuit, nous n'avons donc pas eu besoin de pirater un logiciel ou d'utiliser des licenses étudiantes contraignantes, et nous avons notamment le droit de montrer notre projet. Ceci est relativemment important pour nous, étant donné que nous sommes en dernière année, il est primordial de pouvoir partager nos réalisations dans le cadre de recherche de stage ou d'emploi. Cependant, la suite d'Autodesk (Maya ou 3DsMax) étant majoritairement utilisée dans l'industrie et le divertissement, nous ne sommes pas formé sur ces logiciels en choisissant Blender.
+Nous avons effectué la modélisation du dragon sous Blender. Nous avons choisis ce logiciel pour plusieurs raisons. D'abord son accessibilité, il est plus intuitif qu'une grande partie de ses concurrents (Maya ou 3DsMax) et permet donc d'avoir des résultats convaincants plus rapidement. Ensuite il a l'avantage d'être libre et gratuit, nous n'avons donc pas eu besoin de pirater un logiciel ou d'utiliser des licences étudiantes contraignantes, et nous avons notamment le droit de montrer notre projet. Ceci est relativemment important pour nous, étant donné que nous sommes en dernière année, il est primordial de pouvoir partager nos réalisations dans le cadre de recherche de stage ou d'emploi. Cependant, la suite d'Autodesk (Maya ou 3DsMax) étant majoritairement utilisée dans l'industrie et le divertissement, nous ne sommes pas formé sur ces logiciels en choisissant Blender.
 
 Son armature se découpe en plusieurs parties indépendantes les unes des autres. Il y a :
 \begin{itemize}
@@ -145,18 +145,20 @@ Le fonctionnement est relativement simple, il y a un $eventListenner$ qui écout
         \caption{Diagramme de classe pour la structure d'un Mesh}
     \end{center}
 \end{figure}
-    La structure de Mesh est ce qui nous permet d'effectuer le rendu de notre objet. Elle est composée d'une liste de bone et une de vertice. On peut ainsi savoir qui est lié à qui. De plus, dans chaque verice on stocke aussi l'importance des bones sur lui dans le tableau de Weights. Le nombre de bones est volontairement limité à 4 pour alléger un peu les calculs, et d'après l'avis de plusieurs utilisateur de la biliothèque ce nombre est suffisant. 
 
-    Il y a aussi une liste de face qui permet de savoir quels vertices forme quel polygone. On stocke avec les normal à chaque face ce qui est très utile pour les rendus d'illuminations par exemple.
+\par
+La structure de Mesh est ce qui nous permet d'effectuer le rendu de notre objet. Elle est composée d'une liste de $bones$ et une de $vertices$. On peut ainsi savoir qui est lié à qui. De plus, dans chaque $vertice$ on stocke aussi l'importance des $bones$ sur lui dans le tableau de $Weights$. Le nombre de $bones$ est volontairement limité à 4 pour alléger un peu les calculs, et d'après l'avis de plusieurs utilisateurs de la biliothèque, ce nombre est suffisant. 
 
-    La fonction qui procède au rendu est la fonction render. Dans le SceneHandler on appel cette fonction pour chaque Mesh qui va parcourir la liste des faces afin d'en effectuer le rendu. C'est d'ailleurs ici, que l'on effectue les transformations apportées aux vertices lors de l'animation afin d'en fair ele rendu.
-
-    Toute nos listes sont initialisée grace à la méthode initMeshList de SceneHandler et ce avant le premier rendu ce qui nous permet d'effectuer certain calcul en amont. D'où l'intéret de se servir de nos propres structures.
+\par
+Il y a aussi une liste de face qui permet de savoir quelles vertices forment quel polygone. On stocke avec les normales à chaque face, ce qui est très utile pour les rendus d'illumination par exemple.
 
     \section{Animation Structure}
 
 \par
+La fonction qui procède au rendu est la fonction $render$. Dans le $SceneHandler$ on appelle cette fonction pour chaque $Mesh$ qui va parcourir la liste des faces afin d'en effectuer le rendu. C'est d'ailleurs ici, que l'on effectue les transformations apportées aux vertices lors de l'animation afin d'en faire le rendu.
 
+\par
+Toutes nos listes sont initialisées grâce à la méthode $initMeshList$ de $SceneHandler$ et ce avant le premier rendu ce qui nous permet d'effectuer certains calculs en amont. D'où l'intérêt de se servir de nos propres structures.
 
 \newpage
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
