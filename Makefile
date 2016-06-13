@@ -2,7 +2,7 @@ CC=g++
 FLAGS=-Wall -g
 
 INCLUDE=-I.
-LIBS=-lassimp
+LIBS=-lGL -lglut -lGLU -lGLEW -lassimp
 
 TARGET=IN55.exe
 
@@ -17,7 +17,7 @@ OBJECTS=$(SOURCES:.cpp=.o)
 
 $(TARGET): $(OBJECTS) *.h
 	@echo "Builing the whole project"
-	$(CC) $(OBJECTS) -lGL -lglut -lGLU $(LIBS) -o $(TARGET)
+	$(CC) $(OBJECTS) $(LIBS) -o $(TARGET)
 
 %.o: %.cpp
 	@echo "Compiling .cpp files"

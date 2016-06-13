@@ -129,7 +129,7 @@ void SceneHandler::render() {
 
     glTranslatef( -scene_center.x, -scene_center.y, -scene_center.z );
 
-    // angle += 0.9;
+    angle += 0.5;
     glRotatef(angle, 0, 1, 0);
 
     // add root node transform matrix

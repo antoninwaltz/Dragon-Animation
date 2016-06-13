@@ -55,19 +55,16 @@ void Mesh::render(bool anim) {
                 Vertice *v = this->getVertex(index);
                 aiMatrix4x4 t;
                 for (int k = 0; k < v->getBoneNumber(); k++) {
-                    t +=  v->getBonesWeight(k) * boneStateList[this->getBoneIndex(v->getBonesID(k))];
+                    t = t + v->getBonesWeight(k) * boneStateList[this->getBoneIndex(v->getBonesID(k))];
                 }
-                std::cout << "Mat: " << t.a1 << t.a2 << t.a3 << t.a4 << "\n";
-                std::cout << "     " << t.b1 << t.b2 << t.b3 << t.b4 << "\n";
-                std::cout << "     " << t.c1 << t.c2 << t.c3 << t.c4 << "\n";
-                std::cout << "     " << t.d1 << t.d2 << t.d3 << t.d4 << "\n";
-                glMultMatrixf(&t.Transpose().a1);
+                // std::cout << t << "\n";
+                glMultMatrixf(&t.a1);
             }
+            // glPopMatrix();
             if (this->getNormal(index) != NULL) {
                 glNormal3fv(&this->getNormal(index)->x);
             }
             glVertex3fv(&(this->getVertex(index)->getPosition()).x);
-            // glPopMatrix();
         }
         glEnd();
     }
@@ -102,8 +99,6 @@ void CalcInterpolatedPosition(aiVector3D& Out, float AnimationTime, BoneAnim* bo
     unsigned int NextPositionIndex = (PositionIndex + 1);
     float d = boneAnim->getTrans(NextPositionIndex).mTime - boneAnim->getTrans(PositionIndex).mTime;
     float f = (AnimationTime - (float)boneAnim->getTrans(PositionIndex).mTime) / d;
-    std::cout << "AnimationTime: " << AnimationTime << "\n";
-    std::cout << "f: " << f << "\n";
     // assert(f >= 0.0f && f <= 1.0f);
     const aiVector3D& StartPositionV = boneAnim->getTrans(PositionIndex).mValue;
     const aiVector3D& EndPositionV = boneAnim->getTrans(NextPositionIndex).mValue;
@@ -166,8 +161,7 @@ void Mesh::updateBoneStateList(float AnimationTime, const aiNode* pNode, const a
 
     int BoneIndex = -1;
     if ((BoneIndex = getBoneIndex(NodeName)) != -1) {
-        //boneStateList[BoneIndex] = GlobalTransformation * getBone(BoneIndex)->getOffset();
-        boneStateList[BoneIndex] = GlobalTransformation;
+        boneStateList[BoneIndex] = GlobalTransformation * getBone(BoneIndex)->getOffset();
     }
 
     for (unsigned int i = 0 ; i < pNode->mNumChildren ; i++) {

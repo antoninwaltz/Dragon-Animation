@@ -36,7 +36,7 @@ aiMatrix4x4 operator*( float n, aiMatrix4x4 m ) {
             );
 }
 
-aiMatrix4x4 operator+=( aiMatrix4x4 m1, aiMatrix4x4 m2 ) {
+aiMatrix4x4 operator+( aiMatrix4x4 m1, aiMatrix4x4 m2 ) {
     return aiMatrix4x4(
             m1.a1+m2.a1, m1.a2+m2.a2, m1.a3+m2.a3, m1.a4+m2.a4,
             m1.b1+m2.b1, m1.b2+m2.b2, m1.b3+m2.b3, m1.b4+m2.b4,
@@ -50,4 +50,11 @@ aiVector3D getPosition( aiMatrix4x4 mat ) {
 }
 aiVector3D getScale( aiMatrix4x4 mat ) {
     return aiVector3D(mat.a1, mat.b2, mat.c3);
+}
+std::ostream& operator<<(std::ostream& os, const aiMatrix4x4& m) {
+    return os <<
+        "Mat: " << m.a1 << " " << m.a2 << " " << m.a3 << " " << m.a4 << "\n" <<
+        "     " << m.b1 << " " << m.b2 << " " << m.b3 << " " << m.b4 << "\n" <<
+        "     " << m.c1 << " " << m.c2 << " " << m.c3 << " " << m.c4 << "\n" <<
+        "     " << m.d1 << " " << m.d2 << " " << m.d3 << " " << m.d4 << "\n";
 }
