@@ -8,7 +8,6 @@
 #include <vertice.h>
 #include <bone.h>
 #include <mesh.h>
-#include <interpolation.h>
 
 class BoneAnim
 {

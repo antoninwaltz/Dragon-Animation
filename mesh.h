@@ -12,7 +12,6 @@
 #include <vectors.h>
 #include <vertice.h>
 #include <bone.h>
-#include <boneState.h>
 #include <animation.h>
 #include <utils.h>
 
