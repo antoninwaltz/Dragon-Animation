@@ -6,10 +6,11 @@ LIBS=-lassimp
 
 TARGET=IN55.exe
 
-SOURCES=main.cpp\
-		scene.cpp\
-		camera.cpp\
+SOURCES=main.cpp \
+		scene.cpp \
+		camera.cpp \
 		bone.cpp \
+		mesh.cpp \
 		utils.cpp
 
 OBJECTS=$(SOURCES:.cpp=.o)

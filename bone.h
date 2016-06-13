@@ -15,14 +15,16 @@ class Bone{
 	private:
 		aiString name;
 		aiString parentName;
+        aiMatrix4x4 offset;
 		int* verticeIDList;
 		int nbVertice;
 
 	public:
-		Bone(aiString id, aiString p);
+		Bone(aiString id, aiString p, aiMatrix4x4 &o);
 
         aiString getName() { return name; };
         aiString getParentName() { return parentName; };
+        aiMatrix4x4 getOffset() { return offset; };
 		void addVertice(int vert_id);
 
 		int* getListofVertices();

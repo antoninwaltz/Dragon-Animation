@@ -14,7 +14,6 @@
 #include <bone.h>
 #include <boneState.h>
 #include <animation.h>
-#include <scene.h>
 #include <utils.h>
 
 class Face
@@ -56,10 +55,11 @@ class Mesh
         aiVector3D **normalList;
         Face **faceList;
         Bone **boneList;
-        BoneState **boneStateList;
+        aiMatrix4x4 *boneStateList;
         Animation **animList;
         int vertNb, boneNb, faceNb, animNb, maxFaceNb;
         int mesh_id;
+        int currentAnimation;
 
     public:
         Mesh(int id, int vertSize, int boneSize, int faceSize){
@@ -72,142 +72,24 @@ class Mesh
             verticeList = (Vertice**)malloc(vertNb * sizeof(Vertice*));
             normalList = (aiVector3D**)malloc(vertNb * sizeof(aiVector3D*));
             boneList = (Bone**)malloc(boneNb * sizeof(Bone*));
-            boneStateList = (BoneState**)malloc(boneNb * sizeof(BoneState*));
+            boneStateList = (aiMatrix4x4*) malloc(boneNb * sizeof(aiMatrix4x4));
             faceList = (Face**)malloc(faceSize * sizeof(Face*));
+            currentAnimation = 0;
         };
 
-        void initAnimList(const aiScene *scene) {
-            animList = (Animation**) malloc(scene->mNumAnimations * sizeof(Animation*));
-            for (unsigned int i = 0; i < scene->mNumAnimations; i++) {
-                const aiAnimation *anim = scene->mAnimations[i];
-                Animation *my_anim = new Animation(boneNb, scene->mAnimations[i]->mDuration, scene->mAnimations[i]->mTicksPerSecond);
-                for (int j = 0; j < boneNb; j++) {
-                    const aiNodeAnim *nodeAnim = findNodeAnim(anim, getBone(j)->getName());
-                    BoneAnim *boneAnim = new BoneAnim(
-                            nodeAnim->mNumPositionKeys,
-                            nodeAnim->mNumRotationKeys,
-                            nodeAnim->mNumScalingKeys,
-                            getBone(j)->getName());
-                    for (unsigned int k = 0; k < nodeAnim->mNumPositionKeys; k++)
-                        boneAnim->addTrans(nodeAnim->mPositionKeys[k]);
-                    for (unsigned int k = 0; k < nodeAnim->mNumRotationKeys; k++)
-                        boneAnim->addRot(nodeAnim->mRotationKeys[k]);
-                    for (unsigned int k = 0; k < nodeAnim->mNumScalingKeys; k++)
-                        boneAnim->addScal(nodeAnim->mScalingKeys[k]);
-                    my_anim->addBoneAnim(boneAnim);
-                }
-                animList[animNb++] = my_anim;
-            }
-            initBoneStateList();
-        };
-
-        void initBoneStateList() {
-            float tps = animList[0]->getTicksPerSecond();
-            for(int i = 0; i < boneNb; i++) {                
-                BoneAnim *bAnim = animList[0]->getBoneAnim(boneList[i]->getName());
-                BoneState *tmpBoneState = new BoneState(boneList[i]->getName());
-                tmpBoneState->initTrans(bAnim->getTrans(), bAnim->getTrans()+1, tps);
-                tmpBoneState->initRot(bAnim->getRot(), bAnim->getRot()+1, tps);
-                tmpBoneState->initScal(bAnim->getScal(), bAnim->getScal()+1, tps);
-                boneStateList[i]=tmpBoneState;
-            }
-        }
-
-        void updateBoneStateList(int numFrame){
-            float tps = animList[0]->getTicksPerSecond();
-            for(int i = 0; i < boneNb; i++) {                
-                BoneAnim *bAnim = animList[0]->getBoneAnim(boneList[i]->getName());
-                BoneState *tmpBoneState =  boneStateList[i];
-                if(tmpBoneState->getTransLastIndex()>= numFrame){
-                    tmpBoneState->updateTransLastKey(bAnim->getTrans()+tmpBoneState->getiT(),tps);
-                }
-                if(tmpBoneState->getScalLastIndex()>= numFrame){
-                    tmpBoneState->updateScalLastKey(bAnim->getScal()+tmpBoneState->getiS(),tps);
-                }
-                if(tmpBoneState->getRotLastIndex()>= numFrame){
-                    tmpBoneState->updateRotLastKey(bAnim->getRot()+tmpBoneState->getiR(),tps);
-                }
-                tmpBoneState->updateTransValue(numFrame);
-                tmpBoneState->updateScalValue(numFrame);
-                tmpBoneState->updateRotValue(numFrame);
-                boneStateList[i]=tmpBoneState;
-            }
-
-        }
-
-        void render(bool anim) {
-            int i, j;
-            bool use_normal = false;
-            if (this->getNormal(0) != NULL) {
-                use_normal = true;
-            }
-
-            if(use_normal) {
-                glEnable(GL_LIGHTING);
+        void setCurrentAnim(int n) {
+            if (0 < n && n <= animNb) {
+                currentAnimation = n-1;
             } else {
-                glDisable(GL_LIGHTING);
+                currentAnimation = 0;
             }
+        };
 
-            for (i = 0; i < this->getFaceNumber(); i++) {
-                Face *f = this->getFace(i);
-                glBegin(f->getType());
-                for (j = 0; j < f->getIndexNumber(); j++) {
-                    //pushMatrix
-                    int index = f->getIndex(j);
-                    if(anim){
-                        this->movePoint(this->getVertex(index));
-                    }
-                    if (this->getNormal(index) != NULL) {
-                        glNormal3fv(&this->getNormal(index)->x);
-                    }
-                    glVertex3fv(&(this->getVertex(index)->getPosition()).x);
-                    //popMatrix
-                }
-                glEnd();
-            }
+        void initAnimList(const aiScene *scene);
 
-        }
+        void updateBoneStateList(float AnimationTime, const aiNode* pNode, const aiMatrix4x4& ParentTransform);
 
-        void movePoint(Vertice* vert){
-            aiString *bones = vert->getBonesID();
-            float *bWeight = vert->getBonesWeight();
-            aiVector3D* trans = new aiVector3D();
-            aiVector3D* scal = new aiVector3D();
-            aiQuaternion* rot = new aiQuaternion();
-            for(int i = 0; i < vert->getBoneNumber(); i++){
-                int j = 0;
-                std::cout << "Bone: " << bones[i].C_Str() << "\n";
-                while (boneStateList[j]->getName() != bones[i] && j < boneNb) {
-                    j++;
-                }
-                if (j < boneNb){
-                    *trans += (bWeight[i] * (*boneStateList[j]->getCurrTrans()));
-                    *scal += (bWeight[i] * (*boneStateList[j]->getCurrScal()));
-                    *rot = (*rot) * (bWeight[i] * (*boneStateList[j]->getCurrRot()));
-                }
-            }
-            applyScal(vert, scal);
-            applyRot(vert, rot);
-            applyTrans(vert, trans);
-        }
-
-        void applyTrans(Vertice* vert, const aiVector3D* trans){
-            aiMatrix4x4 T;
-            T.Translation(*trans, T);
-            T.Translation(vert->getPosition(), T);
-            vert->setPosition(getPosition(T));
-        }
-
-        void applyScal(Vertice* vert, const aiVector3D* scal){
-            aiMatrix4x4 S;
-            S.Scaling(*scal, S);
-            S.Scaling(vert->getPosition(), S);
-            vert->setPosition(getScale(S));
-        }
-
-        void applyRot(Vertice* vert, aiQuaternion* rot){
-            vert->setPosition(rot->Rotate(vert->getPosition()));
-        }
+        void render(bool anim);
 
         void addVertice(Vertice *vert, aiVector3D *normal, int index) {
             if (index < vertNb) {
@@ -251,6 +133,10 @@ class Mesh
             }
             return -1;
         }
+        Bone *getBone(aiString name) {
+            int i = getBoneIndex(name);
+            return (i != -1) ? boneList[i] : NULL;
+        };
 };
 
 #endif

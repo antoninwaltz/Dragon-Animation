@@ -23,6 +23,17 @@ const aiNode *getChildNode(aiString name, const aiNode *node);
 
 class SceneHandler
 {
+    private:
+        const struct aiScene* scene;
+        Mesh **meshList;
+        int meshNumber;
+        aiVector3D scene_min, scene_max, scene_center;
+        float scale, angle;
+        int numFrame;
+        bool isAnimating;
+        unsigned int numAnimation;
+        clock_t m_startTime;
+
     public:
         virtual ~SceneHandler();
         bool load_file (char * fName);
@@ -34,20 +45,15 @@ class SceneHandler
         const aiScene *getScene() { return scene; };
         void activateAnimation(bool b){if(numAnimation<=scene->mNumAnimations){isAnimating=b;}};
         int getMeshNumber() { return meshNumber; };
-        void setNumAnimation(int n){numAnimation=n;};
+        void setNumAnimation(int n) {
+            for (int i = 0; i < meshNumber; i++) {
+                meshList[i]->setCurrentAnim(n);
+            }
+            numAnimation=n;
+        };
         bool getAnimating(){return isAnimating;};
 
 
-
-    private:
-        const struct aiScene* scene;
-        Mesh **meshList;
-        int meshNumber;
-        aiVector3D scene_min, scene_max, scene_center;
-        float scale, angle;
-        int numFrame;
-        bool isAnimating;
-        unsigned int numAnimation;
 };
 
 #endif

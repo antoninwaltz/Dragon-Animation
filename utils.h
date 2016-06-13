@@ -11,6 +11,8 @@ aiVector3D operator*( float num, aiVector3D v );
 aiQuaternion operator*( float num, aiQuaternion v );
 aiVector3D getPosition( aiMatrix4x4 mat );
 aiVector3D getScale( aiMatrix4x4 mat );
+aiMatrix4x4 operator*( float num, aiMatrix4x4 m );
+aiMatrix4x4 operator+=( aiMatrix4x4 m1, aiMatrix4x4 m2 );
 
 #endif
 

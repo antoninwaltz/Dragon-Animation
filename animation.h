@@ -36,15 +36,15 @@ class Animation
             }
         }
 
-        BoneAnim* getBoneAnim(aiString boneName){
+        BoneAnim* getBoneAnim(const aiString &boneName){
             int i=0;
-            while(listBoneAnim[i]->getName() != boneName && i < nbBoneAnim){
+            while ( i < nbBoneAnim && listBoneAnim[i]->getName() != boneName) {
                 i++;
             }
 
-            if(i<nbBoneAnim){
+            if (i < nbBoneAnim) {
                 return listBoneAnim[i];
-            }else{
+            } else {
                 return NULL;
             }
         }

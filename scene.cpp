@@ -4,6 +4,7 @@
  * Beerware licensed software - 2015
  */
 #include <iostream>
+#include <time.h>
 
 #include <GL/gl.h>
 
@@ -93,8 +94,8 @@ void SceneHandler::initMeshList(const aiNode* nd){
             const aiNode *p = getNode(scene, bones[j]->mName);
             Bone *tmpBone = NULL;
             if (p != NULL) p = p->mParent;
-            if (p != NULL) tmpBone = new Bone(bones[j]->mName, p->mName);
-            else tmpBone = new Bone(bones[j]->mName, aiString(""));
+            if (p != NULL) tmpBone = new Bone(bones[j]->mName, p->mName, bones[j]->mOffsetMatrix);
+            else tmpBone = new Bone(bones[j]->mName, aiString(""), bones[j]->mOffsetMatrix);
             for(k = 0; k < bones[j]->mNumWeights; k++){
                 int vertID = bones[j]->mWeights[k].mVertexId;
                 float weight =bones[j]->mWeights[k].mWeight;
@@ -114,6 +115,7 @@ void SceneHandler::initMeshList(const aiNode* nd){
 
 void SceneHandler::resetNumFrame(){
     numFrame=0;
+    m_startTime = clock();
 }
 
 void SceneHandler::render() {
@@ -121,14 +123,13 @@ void SceneHandler::render() {
     const aiNode *nd = scene->mRootNode;
     aiMatrix4x4 m = nd->mTransformation;
 
-    
-
+    double runningTime = double(clock() - m_startTime) / CLOCKS_PER_SEC;
 
     glScalef(scale, scale, scale);
 
     glTranslatef( -scene_center.x, -scene_center.y, -scene_center.z );
 
-    angle += 0.9;
+    // angle += 0.9;
     glRotatef(angle, 0, 1, 0);
 
     // add root node transform matrix
@@ -138,20 +139,10 @@ void SceneHandler::render() {
 
     // draw all meshes
     for (i = 0; i < meshNumber; ++i) {
-        
-            
+        aiMatrix4x4 ident;
+        aiMatrix4x4::Scaling(aiVector3D(1, 1, 1), ident);
         Mesh *my_mesh = meshList[i];
-        if(isAnimating){
-            if(numFrame<scene->mAnimations[numAnimation-1]->mDuration && numFrame!=0){
-                my_mesh->updateBoneStateList(numFrame);
-                numFrame++;
-            }else if (numFrame==0){
-                my_mesh->initBoneStateList(); 
-                numFrame++;
-            }else{
-                isAnimating=false;
-            }
-        }
+        if (isAnimating) my_mesh->updateBoneStateList(runningTime, scene->mRootNode, ident);
         my_mesh->render(isAnimating);
     }
     glPopMatrix();

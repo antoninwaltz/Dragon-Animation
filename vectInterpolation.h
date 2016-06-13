@@ -32,6 +32,7 @@ class VectInterpolation{
         };
 
         void Update(aiVectorKey newK, int index){
+            std::cout << "Index: " << index << "\n";
             prevKeyframe = nextKeyframe;
             indexPrevKeyframe = indexNextKeyframe;
             nextKeyframe = newK;

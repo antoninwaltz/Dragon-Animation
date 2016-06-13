@@ -50,11 +50,11 @@ class Vertice {
 
         aiVector3D &getPosition(){return position;};
 
-        aiString* getBonesID() { return bonesName; };
+        aiString getBonesID(int i) { return bonesName[i]; };
 
         int getBoneNumber() { return numBone; };
 
-        float* getBonesWeight(){return bonesWeight;};
+        float getBonesWeight(int i){return bonesWeight[i]; };
 
 
 
