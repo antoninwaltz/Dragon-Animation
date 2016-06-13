@@ -145,6 +145,13 @@ Le fonctionnement est relativement simple, il y a un $eventListenner$ qui écout
         \caption{Diagramme de classe pour la structure d'un Mesh}
     \end{center}
 \end{figure}
+    La structure de Mesh est ce qui nous permet d'effectuer le rendu de notre objet. Elle est composée d'une liste de bone et une de vertice. On peut ainsi savoir qui est lié à qui. De plus, dans chaque verice on stocke aussi l'importance des bones sur lui dans le tableau de Weights. Le nombre de bones est volontairement limité à 4 pour alléger un peu les calculs, et d'après l'avis de plusieurs utilisateur de la biliothèque ce nombre est suffisant. 
+
+    Il y a aussi une liste de face qui permet de savoir quels vertices forme quel polygone. On stocke avec les normal à chaque face ce qui est très utile pour les rendus d'illuminations par exemple.
+
+    La fonction qui procède au rendu est la fonction render. Dans le SceneHandler on appel cette fonction pour chaque Mesh qui va parcourir la liste des faces afin d'en effectuer le rendu. C'est d'ailleurs ici, que l'on effectue les transformations apportées aux vertices lors de l'animation afin d'en fair ele rendu.
+
+    Toute nos listes sont initialisée grace à la méthode initMeshList de SceneHandler et ce avant le premier rendu ce qui nous permet d'effectuer certain calcul en amont. D'où l'intéret de se servir de nos propres structures.
 
 \par
 
