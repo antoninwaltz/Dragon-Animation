@@ -85,11 +85,7 @@ Chaque partie est composée de plusieurs os reliés entre eux. Chaque os dispose
 \end{figure}
 \newpage
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\chapter{Diagramme de classe}
 
-
-\newpage
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{Architecture du projet}
 \section{Choix technologiques}
 De part le sujet du projet, nous devions effectuer le rendu 3D à l'aide d'un programme alliant C++ et OpenGL. Il était conseillé de le faire avec Qt, un framework C++ qui offre diverses bibliothèques et widgets pratique pour mettre en oeuvre des applications C++. Cependant, après de nombreux problèmes dus aux différentes plateformes de développement que nous possédions, nous avons temporairement utiliser la bibliothèque Assimp pour commencer à travailler. Elle s'est avérée très efficace, nous avons donc pris la décision de continuer avec elle et de s'affranchir de Qt. 
@@ -141,6 +137,11 @@ Le fonctionnement est relativement simple, il y a un $eventListenner$ qui écout
 
 \newpage
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\chapter{Diagramme de classe}
+
+
+\newpage
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{Bilan}
 \section{Guide d'utilisation}
 Voici les touches à utiliser pour manipuler le programme :
@@ -161,14 +162,11 @@ Durant ce projet, nous avons été confronté à plusieurs difficultés :
 \end{itemize}
 \section{Améliorations possibles}
 \par
-Nous aurions pu améliorer notre projet de la façon suivante :
-\begin{itemize}
-\item Nous pourrions ajouter des textures sur le modèle.
-\item Nous pourrions implémenter un système des gestion de la lumière avec des shaders.
-\item Nous pourrions améliorer les animations, qui restent rudes malgré tout.
-\item Nous pourrions optimiser les interpolations et applications des matrices de transformation via des shaders.
-\item Nous pourrions augmenter la fluidité de la caméra libre et simplifier son maniement par l'utilisateur.
-\end{itemize}
+En l'état il existe plusieurs types d'améliorations qui pourraient être apportée au projet. Tout d'abord, on pourrait texturer notre modèle, actuellement on reconnait la forme d'un dragon mais pas l'aspect. En rajoutant une texture et des normal map et autres bump map, on pourrait donner un aspect reptilien à la surface du dragon et aussi d'afinner certain aspect et de rajouter des formes sans pour autant qu'il y est plus de polygones. Cela impliquerai de mettre en oeuvres de Shaders pour effectuer les calculs d'illuminations par exemple. 
+
+Les Shaders pourraient aussi nous aider à affiner l'animation en allégeant la charge de calcul du CPU en se servant du GPU pour appliquer les transformations. En effet, le parcours de strcuture suivit du calcul des tranformations allourdi la charge de calcul, et en déléguant au GPU on pourrait alors charger des scènes plus lourde et que cela reste fluide. 
+
+La caméra libre pourrait être aussi améliorée, son utilisation est actuellement un peu rude, surtout au niveau des rotations. Il s'agirait de modifier les valeurs de modification de la position et de la rotation. Par exemple, pour la rotation, on base le changement sur l'amplitude du mouvement de la souris, celui mériterait d'être traiter pour que se soit plus agréable et on pourrait rajouter une zone de non action autour du curseur, afin qu'un petit tremblement ne bouge pas la caméra.
 
 \section{Conclusion}
 \par
