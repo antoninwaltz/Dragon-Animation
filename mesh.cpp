@@ -59,6 +59,7 @@ void Mesh::render(bool anim) {
                 }
                 // std::cout << t << "\n";
                 glMultMatrixf(&t.a1);
+                // FIXME: we need to send the data to the shader!!!!
             }
             // glPopMatrix();
             if (this->getNormal(index) != NULL) {

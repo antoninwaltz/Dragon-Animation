@@ -6,7 +6,9 @@
 #include <iostream>
 #include <time.h>
 
+#include <GL/glew.h>
 #include <GL/gl.h>
+
 
 #include <assimp/cimport.h>
 #include <assimp/scene.h>
@@ -40,30 +42,34 @@ SceneHandler::~SceneHandler() {
     aiReleaseImport(scene);
 }
 
-bool SceneHandler::load_file(char *fName) {
+SceneHandler::SceneHandler(char *fName, GLuint prog) {
     scene = aiImportFile(fName,aiProcessPreset_TargetRealtime_MaxQuality);
 
     if (!scene) {
         std::cerr << "Error importing file" << std::endl;
-        return 1;
+    } else {
+        get_bounding_box();
+        scene_center.x = (scene_min.x + scene_max.x) / 2.0f;
+        scene_center.y = (scene_min.y + scene_max.y) / 2.0f;
+        scene_center.z = (scene_min.z + scene_max.z) / 2.0f;
+
+        float tmp = 0;
+        tmp = scene_max.x-scene_min.x;
+        tmp = max(scene_max.y - scene_min.y,tmp);
+        tmp = max(scene_max.z - scene_min.z,tmp);
+        scale = 2.f / tmp;
+
+        angle = 0;
+        meshNumber = 0;
+        meshList = NULL;
+        isAnimating=false;
+        initMeshList(scene->mRootNode);
+
+        // Shader variable
+        m_WVPLocation = glGetUniformLocation(prog, "gWVP");
+        m_WorldMatrixLocation = glGetUniformLocation(prog, "gWorld");
+
     }
-    get_bounding_box();
-    scene_center.x = (scene_min.x + scene_max.x) / 2.0f;
-    scene_center.y = (scene_min.y + scene_max.y) / 2.0f;
-    scene_center.z = (scene_min.z + scene_max.z) / 2.0f;
-
-    float tmp = 0;
-    tmp = scene_max.x-scene_min.x;
-    tmp = max(scene_max.y - scene_min.y,tmp);
-    tmp = max(scene_max.z - scene_min.z,tmp);
-    scale = 2.f / tmp;
-
-    angle = 0;
-    meshNumber = 0;
-    meshList = NULL;
-    isAnimating=false;
-    initMeshList(scene->mRootNode);
-    return 0;
 }
 
 void SceneHandler::initMeshList(const aiNode* nd){
@@ -133,9 +139,15 @@ void SceneHandler::render() {
     glRotatef(angle, 0, 1, 0);
 
     // add root node transform matrix
+    aiMatrix4x4 wm;
+    glGetFloatv(GL_MODELVIEW_MATRIX, &wm.a1);
+    glUniformMatrix4fv(m_WorldMatrixLocation, 1, GL_TRUE, (const GLfloat*)&wm.a1);
+
     aiTransposeMatrix4(&m);
     glPushMatrix();
     glMultMatrixf((float*)&m);
+    glUniformMatrix4fv(m_WVPLocation, 1, GL_TRUE, (const GLfloat*)&m.a1);
+
 
     // draw all meshes
     for (i = 0; i < meshNumber; ++i) {

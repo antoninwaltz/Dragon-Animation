@@ -15,7 +15,7 @@
 #include <scene.h>
 #include <camera.h>
 
-SceneHandler scene;
+SceneHandler *scene;
 
 Camera c;
 
@@ -108,7 +108,7 @@ void display()
     glLoadIdentity();
     c.updateCamera();
 
-    scene.render();
+    scene->render();
 
     glutSwapBuffers();
 }
@@ -132,17 +132,17 @@ void reshape(GLsizei width, GLsizei height) {
 /* Manage ASCII key input */
 void keyInput(unsigned char key, int x, int y){
     switch(key){
-        case'1': scene.setNumAnimation(1);
-                 scene.activateAnimation(true);
-                 scene.resetNumFrame();
+        case'1': scene->setNumAnimation(1);
+                 scene->activateAnimation(true);
+                 scene->resetNumFrame();
                  break;
-        case'2': scene.setNumAnimation(2);
-                 scene.activateAnimation(true);
-                 scene.resetNumFrame();
+        case'2': scene->setNumAnimation(2);
+                 scene->activateAnimation(true);
+                 scene->resetNumFrame();
                  break;
-        case'3': scene.setNumAnimation(3);
-                 scene.activateAnimation(true);
-                 scene.resetNumFrame();
+        case'3': scene->setNumAnimation(3);
+                 scene->activateAnimation(true);
+                 scene->resetNumFrame();
                  break;
         default : break;
     }
@@ -233,11 +233,6 @@ void mouseMoveInput(int x, int y){
 int main(int argc, char** argv)
 {
     c = Camera();
-    scene = SceneHandler();
-
-    if (scene.load_file(argv[1])) {
-        return 1;
-    }
 
     glutInit(&argc, argv);
     glutInitDisplayMode(GLUT_RGB | GLUT_DOUBLE | GLUT_DEPTH);
@@ -253,7 +248,6 @@ int main(int argc, char** argv)
     glutReshapeFunc(reshape);
     initGL();
     glutTimerFunc(0, timer, 0);
-    std::cout << "GUY\n\n\n";
     shaderProg = glCreateProgram();
     if (shaderProg == 0) {
         std::cerr <<  "Error creating shader program\n";
@@ -262,7 +256,15 @@ int main(int argc, char** argv)
     if (!AddShader(GL_VERTEX_SHADER, "shader.vs")) {
         AddShader(GL_VERTEX_SHADER, "shader_legacy.vs");
     }
+    glLinkProgram(shaderProg);
+    std::cout << "GUY\n\n\n";
+    glUseProgram(shaderProg);
+
+    scene = new SceneHandler(argv[1], shaderProg);
+
     glutMainLoop();
+
+    delete scene;
     return 0;
 }
 

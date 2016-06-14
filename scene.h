@@ -31,10 +31,12 @@ class SceneHandler
         bool isAnimating;
         unsigned int numAnimation;
         clock_t m_startTime;
+        GLuint m_WVPLocation;
+        GLuint m_WorldMatrixLocation;
 
     public:
+        SceneHandler(char *fName, GLuint prog);
         virtual ~SceneHandler();
-        bool load_file (char * fName);
         void initMeshList(const aiNode *nd);
         void render();
         void get_bounding_box_for_node (const aiNode* nd, aiMatrix4x4* trafo);
