@@ -19,14 +19,14 @@ uniform mat4 gBones[MAX_BONES];
 
 void main()
 {
-    mat4 BoneTransform = BoneTransform[0] * Weights[0];
-    BoneTransform     += BoneTransform[1] * Weights[1];
-    BoneTransform     += BoneTransform[2] * Weights[2];
-    BoneTransform     += BoneTransform[3] * Weights[3];
+    mat4 Transform = BoneTransform[0] * Weights[0];
+    Transform     += BoneTransform[1] * Weights[1];
+    Transform     += BoneTransform[2] * Weights[2];
+    Transform     += BoneTransform[3] * Weights[3];
 
-    vec4 PosL    = BoneTransform * vec4(Position, 1.0);
+    vec4 PosL    = Transform * vec4(Position, 1.0);
     gl_Position  = gWVP * PosL;
-    vec4 NormalL = BoneTransform * vec4(Normal, 0.0);
+    vec4 NormalL = Transform * vec4(Normal, 0.0);
     Normal0      = (gWorld * NormalL).xyz;
     WorldPos0    = (gWorld * PosL).xyz;
 }
