@@ -6,15 +6,14 @@
 #include <iostream>
 #include <time.h>
 
-#include <GL/glew.h>
-#include <GL/gl.h>
-
 
 #include <assimp/cimport.h>
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
 
 #include <scene.h>
+#include <utils.h>
+
 using namespace std;
 
 const aiNode *getNode(const aiScene *scene, aiString name) {
@@ -48,6 +47,8 @@ SceneHandler::SceneHandler(char *fName, GLuint prog) {
     if (!scene) {
         std::cerr << "Error importing file" << std::endl;
     } else {
+        shaderProg = prog;
+
         get_bounding_box();
         scene_center.x = (scene_min.x + scene_max.x) / 2.0f;
         scene_center.y = (scene_min.y + scene_max.y) / 2.0f;
@@ -68,7 +69,6 @@ SceneHandler::SceneHandler(char *fName, GLuint prog) {
         // Shader variable
         m_WVPLocation = glGetUniformLocation(prog, "gWVP");
         m_WorldMatrixLocation = glGetUniformLocation(prog, "gWorld");
-
     }
 }
 
@@ -78,7 +78,7 @@ void SceneHandler::initMeshList(const aiNode* nd){
     meshList = (Mesh**) realloc(meshList, (nd->mNumMeshes + meshNumber) * sizeof(Mesh*));
     for (i = 0; i < nd->mNumMeshes; ++i) {
         const struct aiMesh* mesh = scene->mMeshes[nd->mMeshes[i]];
-        Mesh *newMesh = new Mesh(i, mesh->mNumVertices, mesh->mNumBones, mesh->mNumFaces);
+        Mesh *newMesh = new Mesh(i, mesh->mNumVertices, mesh->mNumBones, mesh->mNumFaces, shaderProg);
         for(j = 0; j < mesh->mNumVertices; j++){
             Vertice *newVert = new Vertice(j, mesh->mVertices[j]);
             if (mesh->mNormals != NULL) {

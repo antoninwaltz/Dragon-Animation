@@ -44,6 +44,7 @@ void Mesh::render(bool anim) {
     } else {
         glDisable(GL_LIGHTING);
     }
+    // glUniformMatrix4fv(shader_bones, this->getNbBone(), GL_TRUE, boneStateList);
 
     for (i = 0; i < this->getFaceNumber(); i++) {
         Face *f = this->getFace(i);
@@ -53,19 +54,23 @@ void Mesh::render(bool anim) {
             int index = f->getIndex(j);
             if (anim) {
                 Vertice *v = this->getVertex(index);
-                aiMatrix4x4 t;
+                aiMatrix4x4 t[4];
+                glVertexAttribPointer(shader_Normal, 3, GL_FLOAT, GL_FALSE, 0, &this->getNormal(index)->x);
+                glVertexAttribPointer(shader_Weights, 3, GL_FLOAT, GL_FALSE, 0, v->getBonesWeights());
                 for (int k = 0; k < v->getBoneNumber(); k++) {
-                    t = t + v->getBonesWeight(k) * boneStateList[this->getBoneIndex(v->getBonesID(k))];
+                    t[k] = boneStateList[this->getBoneIndex(v->getBonesID(k))].Transpose();
                 }
+                glVertexAttribPointer(shader_Weights, 3, GL_FLOAT, GL_FALSE, 0, &t);
                 // std::cout << t << "\n";
-                glMultMatrixf(&t.a1);
+                // glMultMatrixf(&t.a1);
                 // FIXME: we need to send the data to the shader!!!!
             }
             // glPopMatrix();
             if (this->getNormal(index) != NULL) {
-                glNormal3fv(&this->getNormal(index)->x);
+                glVertexAttribPointer(shader_Normal, 3, GL_FLOAT, GL_FALSE, 0, &this->getNormal(index)->x);
             }
-            glVertex3fv(&(this->getVertex(index)->getPosition()).x);
+            //glVertex3fv();
+            glVertexAttribPointer(shader_Position, 3, GL_FLOAT, GL_FALSE, 0, &(this->getVertex(index)->getPosition()).x);
         }
         glEnd();
     }

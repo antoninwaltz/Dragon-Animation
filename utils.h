@@ -3,9 +3,14 @@
 
 #include <iostream>
 
+#include <GL/glew.h>
+#include <GL/glut.h>
+#include <GL/gl.h>
+
 #include <assimp/cimport.h>
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
+
 
 const aiNodeAnim *findNodeAnim(const aiAnimation *anim, aiString name);
 

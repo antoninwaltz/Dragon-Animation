@@ -3,13 +3,13 @@
 
 #include <iostream>
 
-#include <GL/gl.h>
 
 #include <assimp/cimport.h>
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
 
 #include <vectors.h>
+#include <utils.h>
 
 #define MAX_BONES 4
 
@@ -55,6 +55,7 @@ class Vertice {
         int getBoneNumber() { return numBone; };
 
         float getBonesWeight(int i){return bonesWeight[i]; };
+        float *getBonesWeights(){ return bonesWeight; };
 
 
 

@@ -3,8 +3,6 @@
 
 #include <iostream>
 
-#include <GL/gl.h>
-
 #include <assimp/cimport.h>
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
@@ -59,9 +57,16 @@ class Mesh
         int vertNb, boneNb, faceNb, animNb, maxFaceNb;
         int mesh_id;
         int currentAnimation;
+        GLint shader_bones;
+        GLint shader_Position;
+        GLint shader_Normal;
+        GLint shader_BoneTransform;
+        GLint shader_Weights;
+        GLuint shaderProg;
 
     public:
-        Mesh(int id, int vertSize, int boneSize, int faceSize){
+        Mesh(int id, int vertSize, int boneSize, int faceSize, GLuint prog){
+            shaderProg = prog;
             vertNb = vertSize;
             boneNb = boneSize;
             faceNb = 0;
@@ -74,6 +79,11 @@ class Mesh
             boneStateList = (aiMatrix4x4*) malloc(boneNb * sizeof(aiMatrix4x4));
             faceList = (Face**)malloc(faceSize * sizeof(Face*));
             currentAnimation = 0;
+            shader_bones = glGetUniformLocation(shaderProg, "gBones");
+            shader_Position = glGetAttribLocation(shaderProg, "Position");
+            shader_Normal = glGetAttribLocation(shaderProg, "Normal");
+            shader_BoneTransform = glGetAttribLocation(shaderProg, "BoneTransform");
+            shader_Weights = glGetAttribLocation(shaderProg, "Weights");
         };
 
         void setCurrentAnim(int n) {

@@ -33,6 +33,7 @@ class SceneHandler
         clock_t m_startTime;
         GLuint m_WVPLocation;
         GLuint m_WorldMatrixLocation;
+        GLuint shaderProg;
 
     public:
         SceneHandler(char *fName, GLuint prog);
