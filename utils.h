@@ -2,6 +2,7 @@
 #define __UTILS_H__
 
 #include <iostream>
+#include <cassert>
 
 #include <GL/glew.h>
 #include <GL/glut.h>
