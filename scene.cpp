@@ -154,7 +154,12 @@ void SceneHandler::render() {
         aiMatrix4x4 ident;
         aiMatrix4x4::Scaling(aiVector3D(1, 1, 1), ident);
         Mesh *my_mesh = meshList[i];
-        if (isAnimating) my_mesh->updateBoneStateList(runningTime, scene->mRootNode, ident);
+        if (isAnimating) {
+            if (!my_mesh->updateBoneStateList(runningTime, scene->mRootNode, ident)) {
+                isAnimating = false;
+                glUseProgram(0); // This is a pretty ugly hack
+            }
+        }
         my_mesh->render(isAnimating);
     }
     glPopMatrix();

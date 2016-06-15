@@ -19,6 +19,7 @@ Camera c;
 
 std::list<GLuint> shaderList;
 GLuint shaderProg;
+GLuint shaderObj;
 
 
 float d_angle_x =0.0f;
@@ -47,34 +48,34 @@ bool AddShader(GLenum ShaderType, const char* pFilename)
         return false;
     }
 
-    GLuint ShaderObj = glCreateShader(ShaderType);
+    shaderObj = glCreateShader(ShaderType);
 
-    if (ShaderObj == 0) {
+    if (shaderObj == 0) {
         std::cerr << "Error creating shader type " << ShaderType << "\n";
         return false;
     }
 
     // Save the shader object - will be deleted in the destructor
-    shaderList.push_back(ShaderObj);
+    shaderList.push_back(shaderObj);
 
     const GLchar* p[1];
     p[0] = s.c_str();
     GLint Lengths[1] = { (GLint)s.size() };
 
-    glShaderSource(ShaderObj, 1, p, Lengths);
+    glShaderSource(shaderObj, 1, p, Lengths);
 
-    glCompileShader(ShaderObj);
+    glCompileShader(shaderObj);
 
     GLint success;
-    glGetShaderiv(ShaderObj, GL_COMPILE_STATUS, &success);
+    glGetShaderiv(shaderObj, GL_COMPILE_STATUS, &success);
 
     if (!success) {
         GLchar InfoLog[1024];
-        glGetShaderInfoLog(ShaderObj, 1024, NULL, InfoLog);
+        glGetShaderInfoLog(shaderObj, 1024, NULL, InfoLog);
         std::cerr << "Error compiling '" << pFilename << "': '" << InfoLog << "'\n";
         return false;
     }
-    glAttachShader(shaderProg, ShaderObj);
+    glAttachShader(shaderProg, shaderObj);
 
     return true;
 }
@@ -129,6 +130,7 @@ void reshape(GLsizei width, GLsizei height) {
 
 /* Manage ASCII key input */
 void keyInput(unsigned char key, int x, int y){
+    glUseProgram(shaderProg);
     switch(key){
         case'1': scene->setNumAnimation(1);
                  scene->activateAnimation(true);
@@ -251,12 +253,14 @@ int main(int argc, char** argv)
         std::cerr <<  "Error creating shader program\n";
         return 1;
     }
-    if (!AddShader(GL_VERTEX_SHADER, "shader.vs")) {
-        AddShader(GL_VERTEX_SHADER, "shader_legacy.vs");
+    if (AddShader(GL_VERTEX_SHADER, "shader.vs")) {
+        std::cout << "loading 3.3 shader\n";
+    } else if (AddShader(GL_VERTEX_SHADER, "shader_legacy150.vs")) {
+        std::cout << "loading 1.5 shader\n";
+    } else if (AddShader(GL_VERTEX_SHADER, "shader_legacy120.vs")) {
+        std::cout << "loading 1.2 shader\n";
     }
     glLinkProgram(shaderProg);
-    std::cout << "GUY\n\n\n";
-    glUseProgram(shaderProg);
 
     scene = new SceneHandler(argv[1], shaderProg);
 

@@ -96,7 +96,7 @@ class Mesh
 
         void initAnimList(const aiScene *scene);
 
-        void updateBoneStateList(float AnimationTime, const aiNode* pNode, const aiMatrix4x4& ParentTransform);
+        bool updateBoneStateList(float AnimationTime, const aiNode* pNode, const aiMatrix4x4& ParentTransform);
 
         void render(bool anim);
 

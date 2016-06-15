@@ -61,16 +61,16 @@ void Mesh::render(bool anim) {
                     t[k] = boneStateList[this->getBoneIndex(v->getBonesID(k))].Transpose();
                 }
                 glVertexAttribPointer(shader_Weights, 3, GL_FLOAT, GL_FALSE, 0, &t);
-                // std::cout << t << "\n";
-                // glMultMatrixf(&t.a1);
-                // FIXME: we need to send the data to the shader!!!!
+                if (this->getNormal(index) != NULL) {
+                    glVertexAttribPointer(shader_Normal, 3, GL_FLOAT, GL_FALSE, 0, &this->getNormal(index)->x);
+                }
+                glVertexAttribPointer(shader_Position, 3, GL_FLOAT, GL_FALSE, 0, &(this->getVertex(index)->getPosition()).x);
+            } else {
+                if (this->getNormal(index) != NULL) {
+                    glNormal3fv(&this->getNormal(index)->x);
+                }
+                glVertex3fv(&(this->getVertex(index)->getPosition()).x);
             }
-            // glPopMatrix();
-            if (this->getNormal(index) != NULL) {
-                glVertexAttribPointer(shader_Normal, 3, GL_FLOAT, GL_FALSE, 0, &this->getNormal(index)->x);
-            }
-            //glVertex3fv();
-            glVertexAttribPointer(shader_Position, 3, GL_FLOAT, GL_FALSE, 0, &(this->getVertex(index)->getPosition()).x);
         }
         glEnd();
     }
@@ -131,11 +131,12 @@ void CalcInterpolatedRotation(aiQuaternion& Out, float AnimationTime, BoneAnim* 
     Out = Out.Normalize();
 }
 
-void Mesh::updateBoneStateList(float AnimationTime, const aiNode* pNode, const aiMatrix4x4& ParentTransform)
+bool Mesh::updateBoneStateList(float AnimationTime, const aiNode* pNode, const aiMatrix4x4& ParentTransform)
 {
     aiString NodeName(pNode->mName.data);
 
     Animation* anim = animList[currentAnimation];
+    if (anim->getDuration() <= AnimationTime) return false;
 
     aiMatrix4x4 NodeTransformation(pNode->mTransformation);
 
@@ -173,4 +174,5 @@ void Mesh::updateBoneStateList(float AnimationTime, const aiNode* pNode, const a
     for (unsigned int i = 0 ; i < pNode->mNumChildren ; i++) {
         this->updateBoneStateList(AnimationTime, pNode->mChildren[i], GlobalTransformation);
     }
+    return true;
 }
