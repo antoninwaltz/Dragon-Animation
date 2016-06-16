@@ -1,13 +1,10 @@
 #version 150
 
-// FIXME
-
 attribute vec3 Position;
 attribute vec3 Normal;
 attribute mat4 BoneTransform[4];
 attribute float Weights[4];
 
-varying vec2 TexCoord0;
 varying vec3 Normal0;
 varying vec3 WorldPos0;
 
@@ -15,7 +12,6 @@ const int MAX_BONES = 100;
 
 uniform mat4 gWVP;
 uniform mat4 gWorld;
-uniform mat4 gBones[MAX_BONES];
 
 void main()
 {

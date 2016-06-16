@@ -52,21 +52,12 @@ Antonin \textsc{WALTZ}\\
 \end{figure}
 \end{frame}
 
-\section{Choix technologiques}
-\begin{frame}
-\frametitle{Choix technologiques}
-\begin{itemize}
-    \item Utilisation de la librairie Asset Import
-    \item %TODO
-\end{itemize}
-\end{frame}
-
 \section{Architecture}
 \begin{frame}
 \frametitle{Structure d'un Mesh}
 \begin{figure}[H]
     \begin{center}
-        \includegraphics[width=0.7\textwidth]{MeshStructure.jpg}
+        \includegraphics[width=0.8\textwidth]{MeshStructure.jpg}
         \caption{Diagramme de classe pour la structure d'un Mesh}
     \end{center}
 \end{figure}
@@ -76,12 +67,34 @@ Antonin \textsc{WALTZ}\\
 \frametitle{Structure d'une Animation}
 \begin{figure}[H]
     \begin{center}
-        \includegraphics[width=0.7\textwidth]{AnimStructure.jpg}
+        \includegraphics[width=0.9\textwidth]{AnimStructure.jpg}
         \caption{Diagramme de classe pour la structure d'une animation}
     \end{center}
 \end{figure}
 \end{frame}
 
+\section{Animation}
+\begin{frame}{Calcul des transformations}
+    \begin{itemize}
+        \item Utilisation d'une liste de matrices, associée aux bones
+        \item La scène passe au shader les matrices de transformation du monde
+        \item Le mesh passe au shader les informations pour chaque vertex (position, normale, bone ID, poids)
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Shader}
+    \begin{itemize}
+        \item Entrées: Position, Normale, BoneTransform[4], Weights[4]
+        \item Sorties: Normal, WorldPosition
+        \item Entrées uniformes: ModelPosition, WorldTransform
+    \end{itemize}
+    Actions effectuées:
+    \begin{itemize}
+        \item Somme de toutes les transformations de BoneTransform multipliées par Weights.
+        \item Multiplication de la transformation obtenue par celle du monde et du mesh
+        \item Multiplication de cette dernière matrices par la position du vertex et la normale pour les envoyer en sortie
+    \end{itemize}
+\end{frame}
 
 \section{Bilan}
 \begin{frame}
@@ -100,14 +113,6 @@ Antonin \textsc{WALTZ}\\
 	\item Texturer le modèle
 	\item Intégrer un système de gestion de la lumière
 	\item Améliorer la fluidité et le maniement de la caméra libre
-\end{itemize}
-\end{frame}
-
-\begin{frame}
-\frametitle{Conclusion}
-\begin{itemize}
-	\item Première expérience de programmation graphique avec OpenGL
-	\item Découverte de la librairie Asset Import
 \end{itemize}
 \end{frame}
 
