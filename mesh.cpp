@@ -60,6 +60,7 @@ void Mesh::render(bool anim) {
                 for (int k = 0; k < v->getBoneNumber(); k++) {
                     t[k] = boneStateList[this->getBoneIndex(v->getBonesID(k))].Transpose();
                 }
+                std::cout << t[0] << "\n";
                 glVertexAttribPointer(shader_Weights, 3, GL_FLOAT, GL_FALSE, 0, &t);
                 if (this->getNormal(index) != NULL) {
                     glVertexAttribPointer(shader_Normal, 3, GL_FLOAT, GL_FALSE, 0, &this->getNormal(index)->x);
