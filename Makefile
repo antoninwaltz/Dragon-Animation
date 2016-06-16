@@ -2,7 +2,7 @@ CC=g++
 FLAGS=-Wall -g
 
 INCLUDE=-I.
-LIBS=-lGL -lglut -lGLU -lGLEW -lassimp
+LIBS=-L. -lGL -lglut -lGLU -lGLEW -lassimp
 
 TARGET=IN55.exe
 
